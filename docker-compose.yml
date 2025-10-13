@@ -1,0 +1,19 @@
+# COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose
+
+version: '3.2'
+services:
+
+  dashboards:
+    image: "abuse-dashboard:latest"
+    build:
+      context: .
+    restart: always
+    ports:
+      - 7000:7000
+    environment:
+      - SERVER_SERVLET_CONTEXT_PATH=/
+    volumes:
+      - type: bind
+        source: ./application.yml
+        target: /app/config/application.yml
+
