@@ -1,12 +1,5 @@
 #logging.level.root=DEBUG
 
-twitter_api:
-  compliance:
-    enabled: false
-
-youtube-api:
-  enabled: false
-
 spring:
   task:
     scheduling:
@@ -23,26 +16,10 @@ server:
     mime-types: text/html,text/plain,text/css,application/javascript,application/json
     min-response-size: 1024
 
-# change to http://127.0.0.1:8000 for local running!
-networkg:
-  endpoint: http://networkg:8000
-
 languages:
   en:
     name: English
     direction: ltr
-  es:
-    name: Español
-    direction: ltr
-  pt:
-    name: Português
-    direction: ltr
-  uk:
-    name: українська
-    direction: ltr
-#  hi:
-#    name: हिन्दी
-#    direction: ltr
 
 rootURL: http://localhost:3000/
 
