@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&amp;display=swap">
+  <style>
+    body, html {
+      font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      letter-spacing: 0.00938em;
+      padding-left: 24px;
+      padding-right: 24px;
+      padding-top: 10px;
+    }
+
+    h1 {
+      font-size: 34px;
+      font-weight: 400;
+      line-height: 1.235;
+      letter-spacing: 0.00735em;
+      color: #4e954b;
+      margin-top: 0;
+    }
+
+    a, a:visited {
+      color: #4e954b;
+    }
+  </style>
+</head>
+
+<body>
+  
+  <div>
+    <img style="float:left; padding-right:1em" width="48" src="cid:dashboard-logo.png"/><h1 style="float:left;" th:text="#{title}">Social Media Abuse Dashboard</h1>
+    <a style="float:right; vertical-align: bottom;" href="https://gate-socmedia.group.shef.ac.uk/" target="_blank"><img height="60" src="cid:UoS_Crest.png"/></a>
+  </div>
+
+  <div style="clear: both;">
+
+    <h2 th:text="${dashboardTitle}">Dashboard Name Goes Here</h2>
+
+    <p th:text="#{watchdog(${platforms})}">platform status</p>
+
+    
+    <p th:if="${dashboardURL}"><a th:text="#{visit}" th:href="@{${dashboardURL}}">Visit your dashboard for more information.</a>
+
+    <hr/>
+
+    <p style="font-style: italic;" th:utext="#{help_is_available}">help is available from...</p>
+
+  </div>
+</body>
+
+</html>

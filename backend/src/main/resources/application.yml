@@ -1,0 +1,57 @@
+#logging.level.root=DEBUG
+
+twitter_api:
+  compliance:
+    enabled: false
+
+youtube-api:
+  enabled: false
+
+spring:
+  task:
+    scheduling:
+      pool:
+        size: 10
+  mvc:
+    async:
+      request-timeout: 3600000
+
+server:
+  port: 7000
+  compression:
+    enabled: true
+    mime-types: text/html,text/plain,text/css,application/javascript,application/json
+    min-response-size: 1024
+
+# change to http://127.0.0.1:8000 for local running!
+networkg:
+  endpoint: http://networkg:8000
+
+languages:
+  en:
+    name: English
+    direction: ltr
+  es:
+    name: Español
+    direction: ltr
+  pt:
+    name: Português
+    direction: ltr
+  uk:
+    name: українська
+    direction: ltr
+#  hi:
+#    name: हिन्दी
+#    direction: ltr
+
+rootURL: http://localhost:3000/
+
+colours:
+  Twitter: "#1d9cf0"
+  YouTube: "#cc0000"
+  Telegram: "#ddaf24"
+  Mastodon: "#5945d9"
+  Website: "#2ca02c"
+  TikTok: "#00f2ea"
+  Facebook: "#3b5998"
+  Instagram: "#c32aa3"

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.7.18</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>uk.ac.gate</groupId>
+	<artifactId>tweet-dashboard</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>conversation</name>
+	<description>Dashboard for exploring a Tweet filled Elasticsearch Index</description>
+	<properties>
+		<java.version>1.8</java.version>
+
+		<!-- this seems to be necessary to override something in spring boot that pulls in an old version -->
+		<elasticsearch.version>7.17.24</elasticsearch.version>
+
+	</properties>
+	<dependencies>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.22</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>5.9</version>
+		</dependency>
+
+		<!-- there isn't a newer parent we can use to bring in this
+		     so we depend on it manually to avoid the vulnerable version -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>5.3.39</version>
+		</dependency>
+
+		<!-- the version pulled in by spring is vulnerable so we force the
+		     use of a newer version -->
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>2.3</version>
+		</dependency>
+
+		<!-- the version pulled in by spring is vulnerable so we force the
+		     use of a newer version -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>1.2.13</version>
+		</dependency>
+
+		<!-- the version pulled in by spring is vulnerable so we force the
+		     use of a newer version -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.13</version>
+		</dependency>
+
+		<!-- there isn't a newer parent we can use to bring in this
+		     so we depend on it manually to avoid the vulnerable version -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-expression</artifactId>
+			<version>5.3.39</version>
+		</dependency>
+
+		<!-- there isn't a newer parent we can use to bring in this
+		     so we depend on it manually to avoid the vulnerable version -->
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-core</artifactId>
+			<version>9.0.95</version>
+		</dependency>
+
+		<!-- the version pulled in by the YouTube lib is vulnerable so we force the
+		     use of a newer version -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>33.3.1-jre</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
+		<!--  this dependency causes mvn spring-boot:run to auto reload on code changed -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.elasticsearch.client</groupId>
+			<artifactId>elasticsearch-rest-high-level-client</artifactId>
+			<version>${elasticsearch.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.16.1</version>
+		</dependency>
+		
+		<!-- the following are used to access the YouTube API for getting the dates -->
+		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.oauth-client</groupId>
+			<artifactId>google-oauth-client-jetty</artifactId>
+			<version>1.34.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-youtube</artifactId>
+			<version>v3-rev20240926-2.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.http-client</groupId>
+			<artifactId>google-http-client-jackson2</artifactId>
+			<version>1.43.3</version>
+		</dependency>
+
+		<!-- xml-apis for org.w3c.dom.ElementTraversal -->
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>1.4.01</version>
+        </dependency>
+
+        <!-- commons-pool for pooling -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+
+		<dependency>
+        	<groupId>org.springframework.boot</groupId>
+        	<artifactId>spring-boot-starter-thymeleaf</artifactId>
+    	</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
