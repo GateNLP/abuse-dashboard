@@ -1,0 +1,786 @@
+{
+    "footer": "Developed by <1>The University of Sheffield</1>",
+    "frontpage": {
+        "heading": "Social Media Abuse Dashboard",
+        "description": "This tool provides ways to explore collections of tweets and other social media posts and abuse directed towards different social media accounts. Select an account below to be redirected to the relevant dataset."
+    },
+    "malta": {
+        "indicators": {
+            "_0": "Death/Rape Threat",
+            "_1": "Other Violence Threat",
+            "_2": "Political Involvement",
+            "_3": "Proximity of Perpetrator",
+            "_4": "Impunity",
+            "_5": "Threat to Family",
+            "_6": "Doxxing",
+            "_7": "Surveillance",
+            "_8": "Physical Context",
+            "_9" : "Psychological Harm",
+            "_10": "Seeding Hashtags/Narratives",
+            "_11": "Coordinated Disinfo",
+            "_12": "Orchestrated Attacks",
+            "_13": "Misogynistic",
+            "_14": "Intersectional Abuse",
+            "_15": "Media Involvement",
+            "_16": "Witch",
+            "_17": "Reputational",
+            "_18": "Corruption",
+            "_19": "Dehumanization",
+            "_20": "Mental Health",
+            "_21": "Call for Arrest",
+            "_22": "Sexualization",
+            "_23": "Celebrating Death",
+            "_24": "Misc. Insult"
+        }
+    },
+    "components": {
+        "userMenu": {
+            "authorFilter": "Add to Author Filter",
+            "mentionFilter": "Add to Mention Filter",
+            "replyToFilter": "Add to In Reply To Filter",
+            "relevantToFilter": "Add to Relevant To Filter",
+            "view": "View Account Info",
+            "viewOn": "View account on {{platform}}",
+            "similar": "Find Similar Users (by description)"
+        },
+        "pdfReport": {
+            "title": "Add to PDF Report",
+            "post": "{{platform}} post by @{{account}} at {{time}}",
+            "addTo": "added item to PDF report"
+        },
+        "sourceMenu": {
+            "filter": "Filter by Source",
+            "visit": "Visit Source Website"
+        }
+    },
+    "dashboard": {
+        "heading": "Social Media Abuse Dashboard",
+        "safety": "If you are affected by any of the information displayed in this dashboard, then help and resources are available from the <1>{{name}}</1>",
+        "heading_with_name": "Social Media Abuse Dashboard for {{name}}",
+        "error": "Error retrieving dashboard results. Please try again later.",
+        "abusiveError": "Error retrieving abusive tweet results. Please try again later.",
+        "description": "This tool provides ways to explore a collection of tweets and other social media posts focused on {{name}}.",
+        "date_range": "Date Range: {{dateMin, date}} to {{dateMax, date}} (Timezone is {{timezone}})",
+        "update": "Update",
+        "reset": "Reset",
+        "retry": "Retry",
+        "to": "to",
+        "country": "Country",
+        "filter": {
+            "collapsed": "Expand to configure advanced search options",
+            "relevantTo": "Relevant To",
+            "authors": "Authored By",
+            "inReplyTo": "In Reply To",
+            "mentions": "Mentions",
+            "hashtags": "Hashtags",
+            "languages": "Restrict to Languages",
+            "platforms": "Restrict to Platforms",
+            "countries": "Posts made from the following countries",
+            "countries_info": "Note that currently only a small number of posts contain location information, and they all come from either Twitter or TikTok.",
+            "topics": "Containing the following topics",
+            "sources": "Twitter Post Sources",
+            "abuse": {
+                "show": "Show Abuse From:",
+                "original": "Original Text",
+                "translated": "Translated Text",
+                "both": "Both",
+                "containing": "Containing abuse of",
+                "any": "any",
+                "all": "all",
+                "types": "of the following types"
+            },
+            "associated": {
+                "label": "Accounts Associated with:",
+                "Government": "Government",
+                "Business": "Businesses"
+            },
+            "addTo": "added {{item}} to dashboard filter",
+            "tabs": {
+                "accounts": "Accounts",
+                "platforms": "Platforms",
+                "hashtags": "Hashtags",
+                "languages": "Languages",
+                "countries": "Countries",
+                "topics": "Topics",
+                "abuse": "Abuse",
+                "sources": "Sources"
+            }
+        },
+        "lang": {
+            "other": "Other",
+            "und": "Unknown",
+            "qam": "Unknown (Mentions Only)",
+            "qct": "Unknown (Cashtags Only)",
+            "qht": "Unknown (Hashtags Only)",
+            "qme": "Unknown (Media Links Only)",
+            "qst": "Unknown (Text Too Short)",
+            "zxx": "Unknown (Media or Card Only)",
+            "art-x-emoji": "Art (Emoji)",
+            "art": "Art"
+        },
+        "platform_specific": {
+            "tab": "Platform Specific"
+        },
+        "summary": {
+            "tab": "Monitored Accounts",
+            "loading": "Please wait as generating an overview for each monitored account can be a time consuming process.",
+            "error": "There was an error while generating the monitored accounts overview information",
+            "description": "For the currently set filter, this page shows the dataset and abuse statistics for each of the monitored accounts. This gives the same information as you would get by manually selecting each account in the filter, but in a much easier way.",
+            "graphs": {
+                "overview": "For each account we calculate two different abuse percentages. Firstly there is the percentage of abusive posts within all posts relevant to the account (but not by the account). Secondly there is the percentage of replies to the account which are abusive. The full details of the accounts are listed ordered by the first of these measures, while both are shown in the accompanying graphs.",
+                "selected": "Within All Posts",
+                "replies": "Within Direct Replies"
+            },
+            "stats_all": {
+                "none": "There were no posts on {{platform}} relevant to {{user}}",
+                "description": "Within all the selected {{platform}} posts relevant to {{user}} there were...",
+                "total": "{{posts}} posts in total.",
+                "unique": "{{posts}} unique posts sent from {{authors}} different accounts.",
+                "originals": "Originals",
+                "replies": "Replies",
+                "retweets": "{{retweets}} retweets/forwards were sent from {{accounts}} different accounts.",
+                "total_by": "{{posts}} posts were by {{user}}",
+                "originals_by": "Originals",
+                "replies_by": "Replies",
+                "retweets_by": "Retweets/forwarded messages posted by {{user}}",
+                "retweets_of": "Retweets & forwards of posts authored by {{user}}",
+                "total_others": "which leaves {{posts}} posts by other people",
+                "original_others": "Original posts by others",
+                "replies_others": "All replies by others",
+                "replies_others_to": "to {{user}}",
+                "replies_others_others": "to others",
+                "retweets_others": "Retweets/forwards not by/of {{user}}"                
+            },
+            "stats_abusive": {
+                "none": "{{user}} received no abusive messages on {{platform}}",
+                "description": "Within the subset of these posts which are considered abusive towards {{user}} there were...",
+                "total": "{{total}} posts in total.",
+                "unique": "{{posts}} unique posts from {{authors}} different accounts.",
+                "originals": "Originals",
+                "replies_to": "Replies to {{user}}",
+                "replies_other": "Other replies which abused {{user}}",
+                "retweets": "{{posts}} retweets/forwards were sent from {{authors}} different accounts.",
+                "selected_total": "This is {{percentage}}% of the selected posts excluding those by {{user}}. This is calculated from",
+                "selected_all": "All Posts",
+                "selected_by": "Posts by {{user}}",
+                "selected_of": "Retweets/forwards of posts by {{user}}",
+                "selected_other": "Which leaves {{posts}} posts not by {{user}}",
+                "all_replies_to_total": "This is {{percentage}}% of all replies to posts authored by {{user}}. This is calculated from",
+                "all_replies_to": "All Replies to {{user}}",
+                "all_replies_to_abusive": "Abusive Replies to {{user}}"
+            },
+            "reports": {
+                "abuseOverview": "{{originals}} original posts, {{replies}} replies to {{user}}, and {{other}} other replies which abused {{user}}.",
+                "abusePosts": "This is {{percentage}}% of the selected posts excluding those by {{user}}.",
+                "abuseReplies": "This is {{percentage}}% of all replies to posts authored by {{user}}.",
+                "overview": "There were {{originals}} original posts, and {{replies}} replies.",
+                "total": "{{total}} posts by {{user}}. There were {{original}} original posts, and {{replies}} replies.",
+                "other": "which leaves {{total}} posts by other people. There were {{original}} original posts, and {{replies}} replies. Of the replies {{sentTo}} were sent to {{user}}"
+            }
+        },
+        "twitter": {
+            "tab": "Twitter",
+            "description": "For each Twitter account of interest we collect Tweets that are either by the account, a reply to the account, which @mention the account, or which include either the screen name or the user's name. We currently collect this data once a day, each time collecting the full previous day. This results in some overlap but ensures that we don't miss any data.   ",
+            "tweets": "Tweets",
+            "nothing": "The current filter doesn't match any tweets.",
+            "source_title": "Source of Twitter Posts",
+            "source_desc": "Posts can be made on Twitter from a number of different applications or cross posted from other websites as well as being made through the official website.",
+            "source": "Source",
+            "all": {
+                "account_title": "Breakdown of all Tweets showing which account they relate to",
+                "country_title": "Breakdown of all Tweets by the country they were sent from.",
+                "country_description": "Note that only tweets from users who have activated the location features are included in this analysis. The pie chart shows the percentages for each country within the set of tweets that have this information. The percentages given in the associated table are calculated for all selected tweets, not just those with location information.",
+                "country_description_map": "Note that this is the same data as presented in the pie chart and table above but simply visualised on a map which may expose geographic relationships not obvious from the raw data",
+                "posters": "Top Posters",
+                "source": "This table shows the source for all posts."
+            },
+            "abusive": {
+                "account_title": "Breakdown of abusive Tweets showing which accounts they relate to",
+                "country_title": "Breakdown of abusive Tweets by the country they were sent from.",
+                "country_description": "Note that only tweets from users who have activated the location features are included in this analysis. The pie chart shows the percentages for each country within the set of tweets that have this information. The percentages given in the associated table are calculated for all selected abusive tweets, not just those with location information.",
+                "country_description_map": "Note that this is the same data as presented in the pie chart and table above but simply visualised on a map which may expose geographic relationships not obvious from the raw data",
+                "posters": "Top Abusive Posters",
+                "source": "This table shows the source for the abusive posts."
+            },
+            "posts": "Posts",
+            "graphExplanation": "Note that a single post may be relevant to more than out account, and so the totals on this graph do not accurately represent the number of posts from a given day. For that information see the Twitter details on the overview tab."
+        },
+        "youtube": {
+            "tab": "YouTube",
+            "description": "YouTube data collection differs from that of most other platforms in that usually the people we are interested in don't have their own channels. Instead we search using their name and collect all comments on the top 500 results. We do this once a day which does result in some overlap but ensures we continue to get the most relevant comments for each user.",
+            "nothing": "The current filter doesn't match any YouTube videos/comments.",
+            "all": {
+                "query_title": "Breakdown of all comments showing which account they relate to",
+                "posters": "Top Posters"
+            },
+            "abusive": {
+                "query_title": "Breakdown of abusive comments showing which accounts they relate to",
+                "posters": "Top Abusive Posters"
+            },
+            "posts": "Posts"
+        },
+        "facebook": {
+            "tab": "Facebook",
+            "nothing": "The current filter doesn't match any Facebook comments.",
+            "all": {
+                "query_title": "Breakdown of all comments showing which account they relate to"
+            },
+            "abusive": {
+                "query_title": "Breakdown of abusive comments showing which accounts they relate to"
+            }
+        },
+        "mastodon": {
+            "tab": "Mastodon",
+            "description": "Data collection for Mastodon accounts starts by collecting every post the user has made (this are available in their publically accessiable outbox). For each of these posts we then recersively retrieve every public reply. This frequently involves accessing many different Mastodon servers not just that used by the user of interest. As yet we have not implemented a way of collecting just the new posts/replies and so currently we periodocally re-collect everything; it is envisaged that this will change in the short term to something more effiecient.",
+            "server": "Server",
+            "posts": "Posts",
+            "nothing": "The current filter doesn't match any Mastodon posts.",
+            "all": {
+                "query_title": "Breakdown of all Mastodon posts showing which account they relate to",
+                "server_title": "Breakdown of all Mastodon posts by the server they originate from."
+            },
+            "abusive": {
+                "query_title": "Breakdown of abusive Mastodon posts showing which accounts they relate to",
+                "server_title": "Breakdown of abusive Mastodon posts by the server they originate from."
+            }
+        },
+        "tiktok": {
+            "tab": "TikTok",
+            "videos": "Videos/Comments",
+            "description": "The data we currently collect from TikTok contains very little extra information over and above the video description or comment text. Specifically we only get user information for videos not comments. Depending on what we have collected (i.e. have we simply taken all videos from a single channel or have we run a search query) there may be very little useful information displayed below.",
+            "all": {
+                "posters": "Top Posters",
+                "country_title": "Breakdown of all Videos/Comments by the country they were posted from.",
+                "country_description": "It is unclear if every video and comment has an associated location. The percentages given in the associated table are calculated for all selected posts, not just those with location information.",
+                "country_description_map": "Note that this is the same data as presented in the pie chart and table above but simply visualised on a map which may expose geographic relationships not obvious from the raw data"
+            },
+            "abusive": {
+                "posters": "Top Abusive Posters",
+                "country_title": "Breakdown of abusive Videos/Comments by the country they were sent from.",
+                "country_description": "It is unclear if every video and comment has an associated location. The percentages given in the associated table are calculated for all selected abusive posts, not just those with location information.",
+                "country_description_map": "Note that this is the same data as presented in the pie chart and table above but simply visualised on a map which may expose geographic relationships not obvious from the raw data"
+            }
+        },
+        "maps": {
+            "RoW": "Rest of the World"
+        },
+        "reports": {
+            "title": "PDF Report Generator",
+            "reportFor": "Report for {{name}}",
+            "noItems": "There are currently no items in the report. Please click the <1/> button next to the data/visualization you wish to add.",
+            "someItems": "The report currently contains the following items:",
+            "abuseOverview": "There were {{originals}} original posts, {{replies}} replies to the monitored account(s), and {{other}} other replies which abuse the monitored account(s).",
+            "abusePosts": "This is {{percentage}}% of the selected posts excluding those by the monitored account(s).",
+            "abuseReplies": "This is {{percentage}}% of all replies to posts authored by the monitored account(s).",
+            "overview": "There were {{originals}} original posts, and {{replies}} replies.",
+            "total": "{{total}} posts by the monitored account(s). There were {{original}} original posts, and {{replies}} replies.",
+            "other": "which leaves {{total}} posts by other people. There were {{original}} original posts, and {{replies}} replies. Of the replies {{sentTo}} were sent to the monitored account(s)",
+            "filter": {
+                "dates": "The following relate to posts made between {{from}} and {{to}}",
+                "restrictions": "Further restricted to just posts...",
+                "query": "matching the query: {{query}}",
+                "postedBy": "posted by these accounts: {{accounts}}",
+                "mention": "that mention these accounts: {{accounts}}",
+                "inReplyTo": "in reply to these accounts: {{accounts}}",
+                "associated": "by accounts associated with: {{types}}",
+                "hashtags": "that contain these hashtags: {{hashtags}}",
+                "languages": "written in these languages: {{languages}}",
+                "countries": "posted from these countries: {{countries}}",
+                "relatedTo": "related to these accounts: {{accounts}}",
+                "platforms": "only from these platforms: {{platforms}}",
+                "abuseTypes": "containing abuse of {{mode}} of these types: {{types}}",
+                "topics": "related to these topics: {{topics}}",
+                "sources": "from these Twitter sources: {{sources}}"
+            },
+            "addComment": "Add a comment to this report item",
+            "addNote": "Add Note",
+            "download": "Download PDF Report",
+            "deleteAll": "Delete All Items",
+            "editItem": "Edit Item",
+            "deleteItem": "Delete Item",
+            "postBy": "{{platform}} post by <1>@{{user}}</1> at <2>{{time}}</2>",
+            "editor": {
+                "title": "Title",
+                "help": "Please provide a title",
+                "img": "Upload Image",
+                "save": "Save",
+                "cancel": "Cancel"
+            }
+        },
+        "addToFilter": "Add {{item}} to dashboard filter",
+        "overview": {
+            "none": "You're current search restrictions do not match any posts.",
+            "language": "Language",
+            "tweetPercent": "Posts (%)",
+            "tooltip": {
+                "lang": "Click on a language to add it to the current dashboard filter",
+                "abusePhrases": "This section shows the top abusive phrases aimed at {{user}}. The bars are coloured by the type of abuse.",
+                "abuseTypes": "Shows the different types of abuse received by {{user}}. Double click a central section to zoom in/out"
+            },
+            "timeline": {
+                "unique": "Original and Reply Posts",
+                "retweets": "Retweets/Forwards",
+                "Twitter": "Twitter",
+                "Telegram": "Telegram",
+                "YouTube": "YouTube",
+                "Mastodon": "Mastodon",
+                "Website": "Website",
+                "TikTok": "TikTok",
+                "Facebook": "Facebook",
+                "Instagram": "Instagram"
+            },
+            "platforms": "These posts are spread across the following platforms:",
+            "retrieveError": "Unable to retrieve",
+            "retrieving": "Retrieving...",
+            "date_range": "Between {{from, date}} and {{to, date}} there were...",
+            "within_original": "within the original and reply posts only",
+            "within_all": "within all posts (original, reply, and retweets/forwards)",
+            "no_abuse": "There are no abusive posts towards {{user}} between {{from, date}} and {{to, date}}.",
+            "hashtags_all": "Top 25 hashtags seen in posts between {{from, date}} and {{to, date}}",
+            "hashtags_abusive": "Top 25 hashtags seen in abusive posts between {{from, date}} and {{to, date}}",
+            "distribution_all": "Distribution of posts made between {{from, date}} and {{to, date}}",
+            "distribution_abusive": "Distribution of abusive posts between {{from, date}} and {{to, date}}",
+            "distribution_update": "Update to Selected Dates",
+            "languages_all": "Top 5 languages across all posts between {{from, date}} and {{to, date}}",
+            "languages_abusive": "Top 5 languages across all abusive posts between {{from, date}} and {{to, date}}",
+            "tweets_all": "Posts created between {{from, date}} and {{to, date}}",
+            "tweets_abusive": "The abusive posts created between {{from, date}} and {{to, date}}",
+            "abusive_strings_topics": "Top 20 abusive strings and associated topics seen in abusive posts between {{from, date}} and {{to, date}}",
+            "order": {
+                "date": "Order By Date",
+                "retweets": "Order By Retweet/Forward Count",
+                "replies": "Order By Reply Count",
+                "favorites": "Order By Favorite Count"
+            },
+            "download_first": "Download first {{posts}} posts",
+            "download_all": "Download all posts",
+            "download_first_abusive": "Download first {{posts}} abusive posts",
+            "download_all_abusive": "Download all abusive posts",
+            "topics_all": "Top 20 topics seen in posts between {{from, date}} and {{to, date}}",
+            "topics_abusive": "Top 20 topics seen in abusive posts between {{from, date}} and {{to, date}}",
+            "abusive_phrases": "Top 20 abusive phrases seen in abusive posts between {{from, date}} and {{to, date}}",
+            "abusive_phrase_cloud": "Top 100 abusive phrases seen in abusive posts between {{from, date}} and {{to, date}}",
+            "abusive_types": "Abuse types seen in abusive posts between {{from, date}} and {{to, date}}",
+            "abusive_overlap": "Overlapping abuse types seen in abusive posts between {{from, date}} and {{to, date}}",
+            "abusive_chord": "Chord Diagram View",
+            "stats_all": {
+                "total": "{{posts}} posts in total.",
+                "unique": "{{posts}} unique posts were sent from {{authors}} different accounts.",
+                "originals": "Originals",
+                "replies": "Replies",
+                "retweets": "{{retweets}} retweets/forwards were sent from {{accounts}} different accounts.",
+                "total_by": "{{posts}} posts by the monitored account(s)",
+                "originals_by": "Originals",
+                "replies_by": "Replies",
+                "retweets_by": "Retweets/forwarded messages posted by the monitored account(s)",
+                "retweets_of": "Retweets & forwards of posts authored by the monitored account(s)",
+                "total_others": "which leaves {{posts}} posts by other people",
+                "original_others": "Original posts by others",
+                "replies_others": "All replies by others",
+                "replies_others_to": "to the monitored account(s)",
+                "replies_others_others": "to others",
+                "retweets_others": "Retweets/forwards not by/of the monitored account(s)"                
+            },
+            "stats_abusive": {
+                "total": "{{total}} posts in total.",
+                "unique": "{{posts}} unique posts were sent from {{authors}} different accounts.",
+                "originals": "Originals",
+                "replies_to": "Replies to the monitored account(s)",
+                "replies_other": "Other replies which abuse the monitored account(s)",
+                "retweets": "{{posts}} retweets/forwards were sent from {{authors}} different accounts.",
+                "selected_total": "This is {{percentage}}% of the selected posts excluding those by the monitored account(s). This is calculated from",
+                "selected_all": "All Posts",
+                "selected_by": "Posts by the monitored account(s)",
+                "selected_of": "Retweets/forwards of the monitored account(s)",
+                "selected_other": "Which leaves {{posts}} posts not by or of the monitored account(s)",
+                "all_replies_to_total": "This is {{percentage}}% of all replies to posts authored by the monitored account(s). This is calculated from",
+                "all_replies_to": "All Replies to the monitored account(s)",
+                "all_replies_to_abusive": "Abusive Replies to the monitored account(s)",
+                "platforms": "These posts are spread across the following platforms:"
+            },
+            "abuse_types": {
+                "root": "all types of abuse",
+                "reputation": "attacks on credibility",
+                "personal": "personal attack",
+                "sexist": "sexist and explicit",
+                "homophobic": "homophobic",
+                "racist": "racist",
+                "general": "general",
+                "belief": "belief",
+                "religious": "religious",
+                "political": "political",
+                "gendered reputation": "gendered attacks on credibility"
+            },
+            "topics": {
+                "food_and_farming": "food and farming",
+                "antisemitism": "antisemitism",
+                "arts_and_culture": "arts and culture",
+                "children_and_young_people": "children and young people",
+                "environment": "environment",
+                "community_and_society": "community and society",
+                "consumer_rights_and_issues": "consumer rights and issues",
+                "covid": "covid",
+                "crime_and_policing": "crime and policing",
+                "defence_and_armed_forces": "defence and armed forces",
+                "democracy": "democracy",
+                "uk_economy": "UK economy",
+                "employment": "employment",
+                "workers_rights": "workers rights",
+                "equality_rights_and_citizenship": "equality rights and citizenship",
+                "financial_services": "financial services",
+                "foreign_affairs": "foreign affairs",
+                "further_education_and_skills": "further education and skills",
+                "government_efficiency_transparency and accountability": "government efficiency transparency and accountability",
+                "government_spending": "government spending",
+                "higher_education": "higher education",
+                "housing": "housing",
+                "borders_and_immigration": "borders and immigration",
+                "business_and_enterprise": "business and enterprise",
+                "international_aid_and_development": "international aid and development",
+                "islamophobia": "islamophobia",
+                "law_and_the_justice_system": "law and the justice system",
+                "local_government": "local government",
+                "national_security": "national security",
+                "northern_ireland": "Northern Ireland",
+                "pensions_and_ageing_society": "pensions and ageing society",
+                "planning_and_building": "planning and building",
+                "public_health": "public health",
+                "public_safety_and_emergencies": "public safety and emergencies",
+                "rural_and_countryside": "rural and countryside",
+                "schools": "schools",
+                "science_innovation": "science innovation",
+                "scotland": "Scotland",
+                "social_care": "social care",
+                "sports_and_leisure": "sports and leisure",
+                "tax_and_revenue": "tax and revenue",
+                "transport": "transport",
+                "wales": "Wales",
+                "welfare": "welfare",
+                "europe": "Europe",
+                "brexit": "brexit",
+                "hatred": "hatred",
+                "other": "other",
+
+                "Health_and_Safety": "Health and Safety",
+                "Security_Defense_and_Well_being": "Security, Defense, and Well Being",
+                "Crime_and_Punishment": "Crime and Punishment",
+                "Politics": "Politics",
+                "Religious_Ethical_and_Cultural": "Religious, Ethical, and Cultural",
+                "International_Relations": "International Relations",
+                "Law_and_Justice_System": "Law and the Justice System",
+                "Economy_and_Resources": "Economy and Resources",
+                "Fairness_Equality_and_Rights": "Fairness, Equality, and Rights"
+            }
+        },
+        "user": {
+            "summary": "Summary",
+            "bios": "Bio History",
+            "homepage": "Homepage",
+            "tweets": "Posts",
+            "lists": "Lists",
+            "following": "Following",
+            "followers": "Followers",
+            "tweets_average": "Posts/Day",
+            "overview": "Joined {{platform}} on the {{createdAt}} - {{accountAge}} days ago",
+            "screen_name": "Screen Name",
+            "account_age": "Account Age (days)",
+            "relevance": "Relevance",
+            "compliance": "@{{screen_name}}: account is now {{status}}",
+            "status": "Account {{status}}",
+            "collectedAt": "User data was collected at {{collectedAt}}",
+            "bio": {
+                "title": "{{name}} (<1>@{{screenName}}</1>) has described themselves in the following ways:",
+                "tweets": "Tweets",
+                "earliest": "Earliest",
+                "latest": "Latest",
+                "bio": "Bio"
+            }
+        },
+        "settings": {
+            "title": "Settings",
+            "immediate": "Settings which take effect immediately",
+            "language": {
+                "title": "Display dashboard in:",
+                "description": "The language used throughout the dashboard. Note this does not include translating the posts themselves."
+            },
+            "maxCSVRows": {
+                "title": "Max CSV Rows",
+                "description": "In a number of places within the dashboard you can download a CSV file of the matching posts. In some cases this may involve a very large amount of posts (and hence data). This option allows you to limit the download to a maximum number of posts. The default of 0 signifies that all matching posts should be downloaded."
+            },
+            "anonymousMode": {
+                "title": "Anonymous Mode",
+                "description": "When taking screenshots for presentations etc. it is good practice to ensure that the posts (especially those labelled as being abusive) are anonymized. When enabled this option replaces all profile images with the default image, and converts the name and handle of the account into a version in which all but the first two characters are replaced by *. Note that posts by the focus of the dashboard are not affected."
+            },
+            "complianceMode": {
+                "title": "Compliance Mode",
+                "description": "Posts are often deleted after they are sent, either by the original author choosing to remove them or because the account is deleted or suspended. Deleted posts should not be kept, but it is impossible to gauge levels of online abuse without making use of deleted posts. This option is a half way point in that it blurs out the entire post's content, whilst making it clear a post did exist. This option is independent of the anonymous mode, although both should probably be enabled before screenshots are taken or public demos given."
+            },
+            "afterUpdate": "Settings which take effect after an update",
+            "topicMode": {
+                "title": "Aggregate topics by",
+                "description": "By default we aggregate topics by what we refer to as their 'theme'. Themes are a set of categories, originally defined by the UK Government, which cover ideas such as the economy, defense, public health. Whilst this categorization is useful it is rather UK centric and doesn't always work well when the focus of the index is from outside the UK. In such cases you can use the 'subtheme' instead which is based more around the detected topic phrases rather than their category.",
+                "theme": "theme",
+                "subtheme": "subtheme"
+            },
+            "abusiveReplies": {
+                "title": "Minimum Abusive Replies",
+                "description": "When considering individual accounts which have sent abusive replies, only show those which have sent more than this number."
+            },
+            "abusiveRetweets": {
+                "title": "Minimum Abusive Retweets",
+                "description": "When considering individual accounts which have retweeted abusive replies, only show those which have retweeted more than this number."
+            }
+        },
+        "userSearch": {
+            "title": "User Search",
+            "viewUser": "View User",
+            "hits": "Posts",
+            "relevance": "Relevance",
+            "search": "Search",
+            "post": "post",
+            "posts": "posts",
+            "description": "This tool allows you to find users by searching for words or phrases within their descriptions. You can also use this tool to find users with an account description similar to another user; to do this the search query should be an @ followed by the username.",
+            "note": "Note that as a user can change their description there can be more posts by a user within the dataset than shown in the search hits column.",
+            "results": "The descriptions of {{users}} users, covering {{tweets}} posts matched the search query:",
+            "within": {
+                "title": "Within these matching results...",
+                "wordcloud": "The following 'interesting' terms appear within the matched user descriptions",
+                "compliance": "{{percentage}}% of the matched posts ({{matched}} out of {{total}}) are no longer available. The reasons why break down as follows:"
+            }
+        },
+        "tweetView": {
+            "translate": "Translate Post",
+            "explore": "Explore this Post",
+            "user": "View user Information",
+            "copy": "Copy Post URL to Clipboard",
+            "parent": "View Parent Post",
+            "view": "View Post",
+            "compliance": {
+                "suspended": "Account Suspended",
+                "deleted": "Post Deleted"
+            },
+            "missing": "This post by @{{screen_name}} is not contained within our index"
+        },
+        "tweetTable": {
+            "type": {
+                "label": "Type of posts:",
+                "originals": "Originals",
+                "replies": "Replies"
+            },
+            "sort": {
+                "label": "Sort:",
+                "asc": "Ascending",
+                "desc": "Descending"
+            },
+            "loading": "Loading..."
+        },
+        "download": {
+            "png": "Download PNG",
+            "svg": "Download SVG",
+            "csv": "Download CSV"
+        },
+        "dataset_overview": {
+            "title": "Dataset Overview"
+        },
+        "abuse_overview": {
+            "title": "Abuse Overview"
+        },
+        "alerts": {
+            "tab": "Alerts",
+            "error": "Error retriving alert information",
+            "none": "There were no posts in the last week to analyse.",
+            "screen_name": "Screen Name",
+            "posts": "Posts",
+            "mean": "Mean",
+            "hashtag": "Hashtag",
+            "country": "Country",
+            "platform": "Platform",
+            "affiliatesOf": "Affiliates Of",
+            "indicator": "Indicator",
+            "indicators": {
+                "government": "State Actors",
+                "business": "Verified Businesses",
+                "threats": "Death/Rape Threats",
+                "misogynistic": "Misogynistic Hate Speech",
+                "proximity": "Location and Proximity",
+                "hashtags": "Hashtag Based Narratives",
+                "posters": "Most Prolific Posters",
+                "other": "Other Indicators",
+                "affiliatedWith": "Accounts Affiliated With...",
+                "orchestrated": "Evidence of Orchestrated Attacks"
+            },
+            "help": {
+                "simple": "The aim of this tab is to highlight when patterns of posting increase in a significant way.",
+                "par1": "Specifically we classify things as being either:",
+                "par2": "The longer the bar, the greater the deviation from the norm for that measure. Data labelled with <1/> signifies that we don't have enough information to calculate the various statistics (usually no relevant posts within the previous eight week block).",
+                "par3": "Note that while an unusual or exceptionally unusual value is worth examining it won't always signify an increase in abuse, especially if you are just considering the total volume of posts, rather than those we have classified as abusive.",
+                "lower": "lower than normal,",
+                "normal": "exactly the same as normal,",
+                "higher": "higher than normal, but not by enough to be unusual,",
+                "unusual": "unusually higher than normal, or",
+                "exceptional": "exceptionally higher than normal."
+            },
+            "all": {
+                "tab": "All Posts",
+                "title": "Changes Over The Last Week In All Posts",
+                "posts": "There were {{posts}} posts in the last week.",
+                "accounts": "The following table shows the top 10 most prolific posters within the last week.",
+                "hashtags": "The following table shows the top 10 repeated hashtags within the last week.",
+                "countries": "The following table shows the top country level sources for posts over the last week. Note that only a small number of posts, all from Twitter, contain country information.",
+                "government": "On Twitter there were {{posts}} posts from verified government accounts in the last week",
+                "business": "On Twitter there were {{posts}} posts from verified business accounts in the last week",
+                "threats": "There were {{posts}} posts in the last week that included a death/rape threat",
+                "other": "The following table shows changes in all posts over the last week relating to other threat indicators",
+                "affiliatedWith": "On Twitter multiple accounts can be affiliated with a single verified account (e.g. journalists with their employer). This table shows the top 10 accounts based on all posts in the last week made by their affiliated accounts."
+            },
+            "abusive": {
+                "tab": "Abusive Posts",
+                "title": "Changes Over The Last Week In Abusive Posts",
+                "none": "There were no abusive posts in the last week to analyse.",
+                "posts": "There were {{posts}} abusive posts in the last week.",
+                "accounts": "The following table shows the top 10 most prolific abusive posters within the last week.",
+                "hashtags": "The following table shows the top 10 repeated hashtags in abusive posts within the last week.",
+                "countries": "The following table shows the top country level sources for abusive posts over the last week. Note that only a small number of posts, all from Twitter, contain country information.",
+                "government": "On Twitter there were {{posts}} abusive posts from verified government accounts in the last week.",
+                "business": "On Twitter there were {{posts}} abusive posts from verified business accounts in the last week",
+                "threats": "There were {{posts}} abusive posts in the last week that included a death/rape threat",
+                "other": "The following table shows changes in abusive posts over the last week relating to other threat indicators",
+                "affiliatedWith": "On Twitter multiple accounts can be affiliated with a single verified account (e.g. journalists with their employer). This table shows the top 10 accounts based on abusive posts in the last week made by their affiliated accounts.",
+                "orchestrated_none": "Over the last week there were no abusive replies sent within an hour of the original post.",
+                "orchestrated_warning": "Note that due to the low volume of abusive replies the statistical significance was calculated over less data than usual.",
+                "orchestrated": "Over the last week there were {{total}} abusive replies sent within an hour of the original post. The peak time for these replies to be sent is between {{min1}} and {{min2}} minutes."
+            },
+            "watched": {
+                "tab": "Watched Terms",
+                "title": "Changes Over The Last Week In Posts With Watched Terms",
+                "edit": "Edit",
+                "getStarted": "You have not yet have added any terms to monitor. Use the Edit button above to get started.",
+                "none": "There were no posts containing the watched terms within the previous week.",
+                "watchedTerms": "Watched Terms Are",
+                "watchedHashtags": "Watched Hashtags Are",
+                "posts": "There were {{posts}} posts containing your watched terms in the last week.",
+                "accounts": "The following table shows the top 10 most prolific posters of your watched terms within the last week.",
+                "hashtags": "The following table shows the top 10 repeated hashtags within the last week which appear along with your watched terms.",
+                "countries": "The following table shows the top country level sources for posts over the last week. Note that only a small number of posts, all from Twitter, contain country information.",
+                "download": "Download posts matching watched terms",
+                "dialog": {
+                    "title": "Edit Your Watched Items",
+                    "terms": "Put each term you want to monitor onto a separate line. Terms will match against either the original text or any translations.",
+                    "hashtags": "Put each hahstag you want to monitor onto a separate line (with the #). Hashtags only match those in the orignal text not in any translations.",
+                    "save": "Save Changes"
+                },
+                "government": "On Twitter there were {{posts}} posts from verified government accounts that matched your watched terms in the last week.",
+                "business": "On Twitter there were {{posts}} posts from verified business accounts that matched your watched terms in the last week",
+                "threats": "There were {{posts}} posts in the last week that inluded a death/rape threat and matched your watch terms",
+                "other": "The following table shows changes in posts matching your watched terms over the last week relating to other threat indicators",
+                "affiliatedWith": "On Twitter multiple accounts can be affiliated with a single verified account (e.g. journalists with their employer). This table shows the top 10 accounts containing your watched terms from the last week based on posts made by their affiliated accounts."
+            }
+        },
+        "abuse_triggers": {
+            "title": "Abuse Triggers",
+            "error": "Error retrieving abusive post results. Please try again later.",
+            "none": "There are no abusive replies to posts by the monitored account(s) between {{from, date}} and {{to, date}}.",
+            "date_range": "Between {{from, date}} and {{to, date}} the monitored account(s) were sent...",
+            "total_replies": "Total Number of Replies: {{replies}}",
+            "abusive_replies": "Number of Abusive Replies (%): {{replies}} ({{percentage}}%)",
+            "there_were": "There were...",
+            "one_reply": "Posts by the monitored account(s) which received at least one reply: {{posts}}",
+            "one_abusive": "Posts by the monitored account(s) with at least one abusive reply (%): {{posts}} ({{percentage}}%)",
+            "paragraph_1": "This table shows all posts by the monitored account(s) which received at least one abusive reply, ordered by the number of abusive replies they received. Details are the total number of replies, the number of abusive replies (both the raw number and as a percentage of the replies), and the time from the posts being created to the first abusive reply.",
+            "paragraph_2": "Clicking on a post will open it within the conversation explorer to allow a more detailed view of the replies. If the post isn't a link this means that whilst there are replies within our collection, we don't have the original post by the monitored account. In that case the time taken for the first abusive reply to appear will also be blank as we are unable to calculate it.",
+            "table": {
+                "tweet_url": "Post URL",
+                "time": "Posted At",
+                "all_replies": "All Replies",
+                "abusive_replies": "Abusive Replies",
+                "abuse_percentage": "% Abuse",
+                "first_abuse": "First Abusive Reply",
+                "screen_name": "Screen Name",
+                "user": "View User",
+                "reply_to": "In Reply To",
+                "retweets": "Retweets/Forwards",
+                "accounts": "Abusive Authors",
+                "ratio": "Abusive Reply/Authors Ratio"
+            },
+            "paragraph_3": "This histogram shows how quickly posts by the monitored account(s) receive their first abusive reply. Each bar shows how many posts by the monitored account(s) received their first abusive reply within that minute window. For example, if the first bar has a value of 10 then this means that ten posts by the monitored account(s) received their first abusive reply within the first 60 seconds after being posted. The graph shows similar bars for the first hour after posts are posted by the monitored account(s).",
+            "abuse_table": "There are the top 10 accounts that have sent abusive replies to posts authored by the monitored account(s).",
+            "retweet_table": "There are the top 10 accounts which have retweeted/forwarded abusive replies to posts authored by the monitored account(s).",
+            "search_hint": "Clicking on a screen name will add it to the search query.",
+            "graph_title": "Number of minutes until the first abusive reply"
+        },
+        "conversation": {
+            "title": "Conversation Explorer",
+            "description": "This tool provides ways to explore the conversations around a post, providing tools and statistics analysing different types of abusive replies.",
+            "section_explore_from": "Post to analyse",
+            "section_tweet_summary": "Post",
+            "section_replies_explorer": "Responses",
+            "section_statistics": "Statistics",
+            "button_explore_tweet": "Analyse Post",
+            "button_explore_parent": "Analyse Parent Post",
+            "button_explore_root": "Analyse Root Post...",
+            "button_refresh": "Refresh",
+            "urlbox": "What is the URL of the Post you want to start exploring from?",
+            "urlbox_placeholder": "Paste the post URL here",
+            "summary_no_replies": "No one has replied to this post so there is no further analysis we can perform.",
+            "summary_histogram_day": "All the replies occurred on the same day so the pie chart gives a clearer breakdown than a histogram would.",
+            "table_description_users": "The {{topX}} users within the selected replies:",
+            "table_users_10": "ten most active",
+            "table_description_urls": "The {{topX}} URLs within the selected replies:",
+            "table_urls_10": "ten most frequently occurring",
+            "table_header_screen_name": "Screen Name",
+            "table_header_tweets": "Tweets",
+            "table_header_url": "URL",
+            "table_header_appearances": "Appearances",
+            "contains_hashtags": "Hashtag",
+            "contains_user_mentions": "User mention",
+            "contains_urls": "URL or media",
+            "the_hashtags": "Hashtags",
+            "the_people": "Users",
+            "the_urls": "URLs",
+            "more_tweets_prefix": "We are still processing the collected posts. So far we have processed {{percentage}}% of the known replies. You can",
+            "more_tweets_suffix": "the page to see if we have processed more.",
+            "filter_by": "Filter by",
+            "replies_filter_stance": "Categories",
+            "replies_filter_contain": "Contains",
+            "replies_filter_statistics": "Reply Statistics",
+            "replies_filtered": "{{tweets}} Posts",
+            "hashtags_summary": "{{count}} of the selected replies contain the hashtag #{{hashtag}}.",
+            "hashtags_view_on_twitter": "View hashtag on Twitter",
+            "tweets_loading": "Loading...",
+            "tweets_all": "That's all the replies, so far...",
+            "refresh_reloading": "reloading...",
+            "refresh_countdown": "Page will automatically reload in {{seconds}}s",
+            "user_homepage": "Homepage",
+            "user_following": "Following",
+            "user_followers": "Followers",
+            "user_tweets": "Posts",
+            "user_lists": "Lists",
+            "user_tweets_average": "Posts/Day",
+            "hashtags_none": "There are no hashtags within the selected replies",
+            "urls_none": "There are no URLs within the selected replies",
+            "distribution_piechart": "Distribution by categories",
+            "distribution_histogram": "Distribution over time",
+            "tooltip_piechart": "We automatically assign a label to each reply based on any abuse they contain. This pie chart shows the proportion of these labels across all the replies to this post, which we have processed so far.",
+            "tooltip_histogram": "This histogram shows how the replies, and their labels, occur over time. Initially we show 7 days after the post, but you can select a different time period by dragging the axis or range selector.",
+            "tooltip_responses": "This section allows you to explore the replies to the post, including the ability to filter the replies to allow you to focus on certain types or content. Note that only direct replies, which we have processed, are shown in this section.",
+            "statistics_known": "Known Replies",
+            "statistics_processed": "Processed Replies",
+            "statistics_filtered": "Filtered Replies",
+            "error": "There has been an error retrieving the conversation details.",
+            "no_matches": "The current filter does not match any of the replies to this post.",
+            "category_description": "Type of Abuse",
+            "categories": {
+                "reputation": "Reputation",
+                "greputation": "Gendered Reputation",
+                "sexist": "Sexist/Explicit",
+                "sexual": "Sexual",
+                "homophobic": "Homophobic",
+                "political": "Political",
+                "racist": "Racist",
+                "religious": "Religious",
+                "general": "General",
+                "none": "No Abuse"
+            }
+        }
+    }
+}

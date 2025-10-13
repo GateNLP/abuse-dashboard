@@ -1,0 +1,41 @@
+const defaultState = {
+    url: undefined,
+    id_str: undefined,
+    cloud: null,
+    urls: null,
+    tweet: null,
+    conversation: null,
+    stance: null,
+    filter: null,
+    restriction: [],
+    flashType: null,
+    flashMessage: null,
+    flashRefresh: false,
+    categories: null,
+    loading: false,
+    done: false,
+    failed: false
+};
+
+const conversationReducer = (state = defaultState, action) => {
+    switch (action.type) {
+        case "SET_CONVERSATION_INPUT":
+        case "SET_CONVERSATION_TWEET_ID":
+            // if we have a new URL then start a clean state
+            state = defaultState;
+        // eslint-disable-next-line
+        case "SET_CONVERSATION_ROOT":
+        case "SET_CONVERSATION_TWEET":
+        case "SET_CONVERSATION_CLOUD":
+        case "SET_CONVERSATION_STANCE":
+        case "SET_CONVERSATION_FILTER":
+        case "SET_CONVERSATION_RESTRICTION":
+        case "SET_CONVERSATION_FLASH":
+        case "SET_CONVERSATION_CATEGORIES":
+        case "SET_CONVERSATION_RESPONSE":
+            return Object.assign({}, state, action.payload);
+        default:
+            return state;
+    }
+};
+export default conversationReducer;
