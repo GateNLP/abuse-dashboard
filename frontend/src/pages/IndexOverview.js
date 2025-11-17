@@ -88,8 +88,6 @@ const IndexOverview = (props) => {
 
     const overview = useSelector(state => state.dashboard.overview);
     const user = useSelector(state => state.dashboard.user);
-    const triggers = useSelector(state => state.abusive.triggers);
-    const triggersFailed = useSelector(state => state.abusive.failed);
 
     // tweet table display options
     const[displayOriginals, setDisplayOriginals] = useState(true)
@@ -273,7 +271,7 @@ const IndexOverview = (props) => {
 
     overviewDescription.push(
         // store the key and values into the report and expand the string at rendering time?
-        t("dashboard.reports.other", {total: (overview.all.count - overview.focus.total).toLocaleString(), original: (overview.tweet_kind.original - overview.focus.original).toLocaleString(), replies: (overview.tweet_kind.reply - overview.focus.reply).toLocaleString(), sentTo: triggers?.all_replies?.toLocaleString() })
+        t("dashboard.reports.other", {total: (overview.all.count - overview.focus.total).toLocaleString(), original: (overview.tweet_kind.original - overview.focus.original).toLocaleString(), replies: (overview.tweet_kind.reply - overview.focus.reply).toLocaleString(), sentTo: overview.all.to_monitored.toLocaleString() })
     )
 
     return (
@@ -331,8 +329,8 @@ const IndexOverview = (props) => {
                         <li>{t("dashboard.overview.stats_all.original_others")}: {(overview.tweet_kind.original - overview.focus.original).toLocaleString()}</li>
                         <li>{t("dashboard.overview.stats_all.replies_others")}: {(overview.tweet_kind.reply - overview.focus.reply).toLocaleString()}</li>
                         {<ul>
-                            <li>{t("dashboard.overview.stats_all.replies_others_to")}: {triggersFailed ? t("dashboard.overview.retrieveError") : (triggers ? triggers.all_replies.toLocaleString() : t("dashboard.overview.retrieving"))}</li>
-                            <li>{t("dashboard.overview.stats_all.replies_others_others")}: {triggersFailed ? t("dashboard.overview.retrieveError") : (triggers ? (overview.tweet_kind.reply - overview.focus.reply - triggers.all_replies).toLocaleString() : t("dashboard.overview.retrieving"))}</li>
+                            <li>{t("dashboard.overview.stats_all.replies_others_to")}: {overview.all.to_monitored.toLocaleString()}</li>
+                            <li>{t("dashboard.overview.stats_all.replies_others_others")}: {(overview.tweet_kind.reply - overview.focus.reply - overview.all.to_monitored).toLocaleString()}</li>
                         </ul>}
                     </ul>
                 </Grid>

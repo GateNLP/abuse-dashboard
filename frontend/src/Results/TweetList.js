@@ -102,7 +102,7 @@ class TweetList extends Component {
             
                 {this.state.items.map((i, index) => (    
                     <div style={style} key={index}>
-                        <CategorisedTweet addToReport={this.props.addToReport} addToQuery={this.props.addToQuery} tabs={this.props.tabs} data={i} category={this.props.keyword("dashboard.conversation.categories."+i.category)} />
+                        <CategorisedTweet addToReport={this.props.addToReport} addToQuery={this.props.addToQuery} tabs={this.props.tabs} data={i} category={this.props.keyword("dashboard.overview.abuse_types."+i.category)} />
                     </div>
                 ))}
             </InfiniteScroll>

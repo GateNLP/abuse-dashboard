@@ -70,6 +70,10 @@ import PlatformSpecific from "./pages/PlatformSpecific";
 import { forgetCoordination } from "./redux/actions/coordinationActions";
 import FacebookDetails from "./pages/FacebookDetails";
 
+// would it be better to load the whole thing so we could use it for other
+// things or should be just do this for now for simplicity
+const abuseIndexLabels = Object.keys(require('./locales/en/translation.json').dashboard.overview.abuse_types);
+
 /**
  * Variant of {@link FormControlLabel} for vertically-stacked lists of checkboxes (like the language selectors).
  */
@@ -210,7 +214,10 @@ const Dashboard = () => {
   const abuseTypes = [];
   
   if (abuseTypes.length === 0) {
-    ["general", "gendered reputation", "homophobic", "personal", "political", "racist", "religious", "reputation", "sexist"].forEach((code, i) => {
+    abuseIndexLabels.forEach((code, i) => {
+
+      if (code === "root" || code === "none") return;
+
       abuseTypes.push({
         name: t("dashboard.overview.abuse_types."+code),
         code: code,
@@ -681,8 +688,15 @@ const Dashboard = () => {
   const setLocation = () => {
     axios.get("./locate?path=" + encodeURIComponent(window.location.pathname))
       .then((response) => {
-        console.log(response.data)
-        dispatch(setAppLocation(response.data))
+
+        // we only really need the first name for each user, so to avoid changing
+        // the rest of the UI, set the name value to just the first name in the list
+        var data = response.data;
+        data.users.forEach(user => {
+          user.name = user.name[0]
+        })
+
+        dispatch(setAppLocation(data))
       })
       .catch((error) => {
         console.log(error);

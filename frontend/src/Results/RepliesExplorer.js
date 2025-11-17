@@ -43,7 +43,7 @@ import Tooltip from "@mui/material/Tooltip";
 
 import { useTranslation } from 'react-i18next';
 
-import ConversationAPI from "../api"
+import ConversationAPI, { abuseTypeColors } from "../api"
 import {setConversationFilter, setConversationRestriction, setTweetID} from "../redux/actions/conversationActions";
 import UserMenu from "../components/buttons/UserMenu";
 
@@ -216,7 +216,7 @@ const RepliesExplorer = (props) => {
                                 <Typography variant="overline" style={{ color: "#B0B0B0"}}>{t("dashboard.conversation.category_description")}</Typography>
                                 <FormGroup>
 
-                                {Object.keys(categories).map((row, key) => (
+                                {categories.map((row, key) => (
                                     <Grid
                                         container
                                         direction="row"
@@ -225,7 +225,7 @@ const RepliesExplorer = (props) => {
                                         key={key}>
 
                                         <Grid item xs>
-                                            <CategoryLabel title={t("dashboard.conversation.categories."+row)} color={categories[row].color}/>
+                                            <CategoryLabel title={t("dashboard.overview.abuse_types."+row)} color={abuseTypeColors[row]}/>
                                         </Grid>
                                         <Grid item>
                                             <FormControlLabel label="" control={<Checkbox color="primary" name={row} onChange={changeFilter} checked={filter.includes(row)} />} />

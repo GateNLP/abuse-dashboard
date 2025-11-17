@@ -12,10 +12,12 @@ import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -111,6 +113,9 @@ public class Twitter {
       putIfExists("source", tweet, "source", result);
       putIfExists("source_text", tweet, "source_text", result);
 
+      Set<String> abuseTypes = getAbuseTypes(source);
+      if (abuseTypes != null) result.put("abuseTypes", abuseTypes);
+
       if (result.containsKey("source")) {
 
          // We should probably NOT do this with a regex, but given the fixed
@@ -172,6 +177,23 @@ public class Twitter {
       result.put("reply_count", counts[3]);
       
       return result;
+   }
+
+   public static Set<String> getAbuseTypes(Map<String,Object> source) {
+
+      List<Map<String,Object>> abuseAnnotations = (List<Map<String,Object>>)((Map<String,Object>)source.get("entities")).get("Abuse");
+
+      if (abuseAnnotations == null) return null;
+
+      Set<String> abuseTypes = new HashSet<String>();
+
+      for (Map<String,Object> annotation : abuseAnnotations) {
+         Object at = annotation.get("type");
+         if (at != null) 
+            abuseTypes.add(at.toString());
+      }
+
+      return abuseTypes;
    }
 
    public static String stripURLs(String value) {

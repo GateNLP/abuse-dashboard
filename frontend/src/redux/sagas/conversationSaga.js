@@ -6,7 +6,7 @@ import {
     setFlashMessage,
     setHashtagCloud, setStance, setTweet, setTweetID
 } from "../actions/conversationActions";
-import ConversationAPI, { getPostLink } from "../../api";
+import ConversationAPI, { getPostLink, abuseTypeColors } from "../../api";
 
 
 const conversationApi = ConversationAPI()
@@ -157,7 +157,6 @@ function* handleConversationTweetID(action) {
     if (categories == null) {
         yield put(setConversationCategories(tweet.category_labels));
     }
-
     
     // work out the full URL for the tweet in case we started from the ID only
     // (i.e. navigating for an in_reply_to_status_id_str link etc.)
@@ -184,7 +183,7 @@ function* handleConversationTweetID(action) {
     Object.keys(tweet.categories).forEach(entry => {
         stance.ids.push(entry)
         stance.values.push(tweet.categories[entry])
-        stance.marker.colors.push(tweet.category_labels[entry].color);
+        stance.marker.colors.push(abuseTypeColors[entry])
     })
 
     // and then put the built object into the state ready for use

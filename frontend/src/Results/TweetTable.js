@@ -140,7 +140,7 @@ class TweetTable extends Component {
 
   render() {
 
-    const { t } = this.props;
+    const { t, showChips } = this.props;
 
     return (
 
@@ -169,7 +169,7 @@ class TweetTable extends Component {
         {this.state.items.map((i, index) => (
 
           <div style={{...style, display: this.display(i)}} key={index}>
-            <TweetView tabs={this.props.tabs || null} data={i} sort={this.props.sort} addToQuery={this.props.addToQuery} addToReport={this.props.addToReport} />
+            <TweetView showChips={showChips} tabs={this.props.tabs || null} data={i} sort={this.props.sort} addToQuery={this.props.addToQuery} addToReport={this.props.addToReport} />
           </div>
         ))}
 

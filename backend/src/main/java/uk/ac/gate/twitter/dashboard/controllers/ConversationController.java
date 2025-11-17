@@ -75,8 +75,6 @@ public class ConversationController {
 
       for (SearchHit hit : hits) {
          Map<String, Object> sourceMap = hit.getSourceAsMap();
-         
-         //if (dashboardConfig.getCompliance().getStrict() && sourceMap.containsKey("compliance")) continue;
             
          Map<String, Object> tweet = getTweetFromSource(dashboardConfig.getTweetPrefix(), sourceMap);
 
@@ -88,8 +86,6 @@ public class ConversationController {
             if (df != null)
                tweet.put("category", df.getValue().toString());
          }
-
-         tweet.put("color", categories.getColor((String) tweet.get("category")));
 
          data.add(tweet);
       }
