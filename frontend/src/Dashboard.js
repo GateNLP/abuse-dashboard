@@ -72,7 +72,6 @@ import FacebookDetails from "./pages/FacebookDetails";
 
 // would it be better to load the whole thing so we could use it for other
 // things or should be just do this for now for simplicity
-const abuseIndexLabels = Object.keys(require('./locales/en/translation.json').dashboard.overview.abuse_types);
 
 /**
  * Variant of {@link FormControlLabel} for vertically-stacked lists of checkboxes (like the language selectors).
@@ -100,6 +99,9 @@ const Dashboard = () => {
   var overview = useSelector(state => state.dashboard.overview);
   const user = useSelector(state => state.dashboard.user);
   const query = useSelector(state => state.dashboard.query);
+
+
+  const abuseIndexLabels = location?.abuseTypes;
 
   const alerts = useSelector(state => state.alerts.alerts);
 
@@ -213,7 +215,7 @@ const Dashboard = () => {
   const [abuseTypesChecked, setAbuseTypesChecked] = useState([]);
   const abuseTypes = [];
   
-  if (abuseTypes.length === 0) {
+  if (abuseTypes.length === 0 && abuseIndexLabels) {
     abuseIndexLabels.forEach((code, i) => {
 
       if (code === "root" || code === "none") return;

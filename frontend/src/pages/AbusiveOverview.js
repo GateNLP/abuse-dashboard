@@ -435,16 +435,18 @@ const AbusiveOverview = (props) => {
         text: null
     }
 
-    // these are ordered credibility, personal, belief
-    const abuseTypeColors = [
-        asc["credibility"],
-        asc["identity"],
-        asc["other"],
-        asc["beliefs"],
-        asc["threats"],
-        asc["sexualisation"]
-    ];
-
+    /**
+     * this array has to hold the colours for the outer ring in the sunburst.
+     * doing so makes sure that the tooltips work, and the colouring doesn't
+     * go completely nuts on the transition. Rather than hard coding them though
+     * we work out what they are from the sunburst data by looking for those
+     * that have the root as the parent.
+    **/
+    const abuseTypeColors = [];
+    overview.all.abuse_types_sunburst.ids.forEach((id, index) => {
+        if (overview.all.abuse_types_sunburst.parents[index] === "root")
+            abuseTypeColors.push(asc[id]);
+    })
 
     const recolor = (graphDiv) => {
         var div = select(graphDiv);
