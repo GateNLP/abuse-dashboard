@@ -101,8 +101,7 @@ public class IndexQueries {
 
     public SearchSourceBuilder generateTriggerCountAndTimeQueries(Dashboards.Config config, String from, String to, Map<String,Object> filter){
 
-        List<User> users = config.getUsers((List<Integer>)filter.getOrDefault("users", null));
-
+        List<User> users = filter == null ? null : config.getUsers((List<Integer>)filter.getOrDefault("users", null));
 
         QueryBuilder inReplyToHandle = queryParts.queryInReplyToUsers(config, users);
         QueryBuilder byTarget = queryParts.queryAuthoredByUsers(config, users);
@@ -157,14 +156,9 @@ public class IndexQueries {
                 QueryBuilders.boolQuery()
                     .filter(queryParts.queryTargetIsAddresseeOrHandle(config, users))
                     .filter(queryParts.queryInReplyToUsers(config, users))
+                    .filter(queryParts.queryAbusiveTweets(config, users)) // this is new
                     .filter(queryParts.queryIsReplyToAnyTweet(config))
             );
-
-        if(query != null && query.length() > 0){
-            filteredIndexRangeQuery.filter(queryParts.processDashboardSearch(config, query));
-        }
-
-        filteredIndexRangeQuery.filter(queryParts.processDashboardFilter(config, filter, true));
 
         // THIS IS THE ONE THAT DETERMINES THE NUMBER OF RESULTS RETURNED
         TermsAggregationBuilder triggersAggregation = AggregationBuilders
@@ -217,7 +211,16 @@ public class IndexQueries {
 
         indexQuery.filter(queryParts.processDashboardFilter(config, filter, abusive));
         
-        
+        List<Dashboards.User> users = config.getUsers((List<Integer>)filter.getOrDefault("users", null));
+        if (users == null) users = config.getUsers();
+
+
+        FilterAggregationBuilder toMonitoredAccount = AggregationBuilders.filter("to_monitored",
+            QueryBuilders.boolQuery()
+                    .filter(queryParts.queryInReplyToUsers(config, users))
+                    .filter(queryParts.queryIsReplyToAnyTweet(config)));
+
+
         // The second part of this should be an or to check if it is Twitter or that the field does not exist
         // so that on old indexes with just tweets we correctly pull the right set of data
         FilterAggregationBuilder uniqueTweetsAggreation = AggregationBuilders.filter("unique",
@@ -314,7 +317,8 @@ public class IndexQueries {
             .aggregation(offensiveSlurTerms)
             .aggregation(significantTerms)
             .aggregation(significantWords)
-            .aggregation(sourcesAggregation);
+            .aggregation(sourcesAggregation)
+            .aggregation(toMonitoredAccount);
         
         if (abusive) {
             // if we want an overview of just the abusive replies to the focus of the index

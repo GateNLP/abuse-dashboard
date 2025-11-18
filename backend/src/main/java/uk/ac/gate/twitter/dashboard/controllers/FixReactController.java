@@ -1,8 +1,11 @@
 package uk.ac.gate.twitter.dashboard.controllers;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -78,6 +81,15 @@ public class FixReactController {
          result.put("users", dashboardConfig.getUsers());
          result.put("helpResourcesURL", dashboardConfig.getHelpResourcesURL());
          result.put("helpResourcesName", dashboardConfig.getHelpResourcesName());
+         result.put("coordination", dashboardConfig.getSupportsCoordination());
+
+         Set<String> abuseTypes = new HashSet<String>();
+         for (Map.Entry<String,List<String>> entry : dashboardConfig.getAbuseHierarchy().entrySet()) {
+            abuseTypes.add(entry.getKey());
+            abuseTypes.addAll(entry.getValue());
+         }
+
+         result.put("abuseTypes", abuseTypes);
       }
 
       String img = partnerOverride != null ? partnerOverride.getImg() : partner.getImg();

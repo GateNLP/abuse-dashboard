@@ -19,6 +19,7 @@ import createPlotlyComponent from 'react-plotly.js/factory';
 import { ReactComponent as AboutIcon } from "../images/About.svg"
 
 import { useTranslation } from 'react-i18next';
+import { abuseTypeColors } from "../api";
 
 const Plot = createPlotlyComponent(Plotly);
 
@@ -45,12 +46,13 @@ const TweetStatistics = () => {
         // I think the reason this was so complex was because it was also being updated
         // in the saga, so there was a bit of a race going on as to who was fixing it
         //stance["labels"][i] = tweet.category_labels[stance["labels"][i]]?.name || stance["labels"][i];
-        stance["labels"].push(t("dashboard.conversation.categories."+stance["ids"][i]));
+        stance["labels"].push(t("dashboard.overview.abuse_types."+stance["ids"][i]));
 
 
         if (tweet.timeline) {
             //tweet.timeline[i]["name"] = tweet.category_labels[tweet.timeline[i]["name"]]?.name || tweet.timeline[i]["name"];
-            tweet.timeline[i]["name"] = stance["labels"][i];
+            tweet.timeline[i]["name"] = t("dashboard.overview.abuse_types."+tweet.timeline[i]["label"])
+            tweet.timeline[i]["marker"] = {"color": abuseTypeColors[tweet.timeline[i]["label"]]}
         }
             
     }

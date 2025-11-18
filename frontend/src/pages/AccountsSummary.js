@@ -118,7 +118,10 @@ const AccountsSummary = (props) => {
 
                 if (summary[i].abusive.all.count > 0) {
                     u.sort = 100 * summary[i].abusive.all.count / (summary[i].overview.all.count - summary[i].overview.focus.total)
-                    u.replies = (100 * summary[i].triggers.abusive_replies / summary[i].triggers.all_replies)
+                    u.replies = (100 * summary[i].abusive.all.to_monitored / summary[i].overview.all.to_monitored)
+                } else {
+                    u.sort = 0;
+                    u.replies = 0;
                 }
             }
         })
@@ -165,12 +168,7 @@ const AccountsSummary = (props) => {
 
             const overview = summary[key].overview;
             
-
             const abusive = summary[key].abusive;
-
-            const triggers = summary[key].triggers;
-
-            const triggersFailed = false;
 
             const overviewDescription = [];
 
@@ -185,7 +183,7 @@ const AccountsSummary = (props) => {
 
             overviewDescription.push(
                 // store the key and values into the report and expand the string at rendering time?
-                t("dashboard.summary.reports.other", {user: user.name, total: (overview.all.count - overview.focus.total).toLocaleString(), original: (overview.tweet_kind.original - overview.focus.original).toLocaleString(), replies: (overview.tweet_kind.reply - overview.focus.reply).toLocaleString(), sentTo: triggers?.all_replies?.toLocaleString() })
+                t("dashboard.summary.reports.other", {user: user.name, total: (overview.all.count - overview.focus.total).toLocaleString(), original: (overview.tweet_kind.original - overview.focus.original).toLocaleString(), replies: (overview.tweet_kind.reply - overview.focus.reply).toLocaleString(), sentTo: overview.all.to_monitored.toLocaleString() })
             )
 
             // This is the start of the abusive bit
@@ -193,7 +191,7 @@ const AccountsSummary = (props) => {
             if (abusive.all.count > 0) {
                 overviewDescription.push(
                     t("dashboard.summary.stats_abusive.description", {user: user.name}) + " " +t("dashboard.summary.stats_abusive.unique", {posts: abusive.all.count.toLocaleString(), authors: abusive.all.tweet_authors.toLocaleString()}) +
-                    " " + t("dashboard.summary.reports.abuseOverview", {user: user.name, originals: abusive.tweet_kind.original.toLocaleString(), replies: triggers.abusive_replies.toLocaleString(), other: (abusive.tweet_kind.reply - triggers.abusive_replies).toLocaleString()})
+                    " " + t("dashboard.summary.reports.abuseOverview", {user: user.name, originals: abusive.tweet_kind.original.toLocaleString(), replies: abusive.all.to_monitored.toLocaleString(), other: (abusive.tweet_kind.reply - abusive.all.to_monitored).toLocaleString()})
                 )
             
                 overviewDescription.push(
@@ -201,7 +199,7 @@ const AccountsSummary = (props) => {
                 )
             
                 overviewDescription.push(
-                    t("dashboard.summary.reports.abuseReplies", {user: user.name, percentage: (100 * triggers.abusive_replies / triggers.all_replies).toFixed(2)})
+                    t("dashboard.summary.reports.abuseReplies", {user: user.name, percentage: (100 * abusive.all.to_monitored / overview.all.to_monitored).toFixed(2)})
                 )
             } else {
                 overviewDescription.push(
@@ -261,8 +259,8 @@ const AccountsSummary = (props) => {
                                     <li>{t("dashboard.summary.stats_all.original_others")}: {(overview.tweet_kind.original - overview.focus.original).toLocaleString()}</li>
                                     <li>{t("dashboard.summary.stats_all.replies_others")}: {(overview.tweet_kind.reply - overview.focus.reply).toLocaleString()}</li>
                                     <ul>
-                                        <li>{t("dashboard.summary.stats_all.replies_others_to", {user: user.name})}: {triggersFailed ? t("dashboard.overview.retrieveError") : (triggers ? triggers.all_replies.toLocaleString() : t("dashboard.overview.retrieving"))}</li>
-                                        <li>{t("dashboard.summary.stats_all.replies_others_others")}: {triggersFailed ? t("dashboard.overview.retrieveError") : (triggers ? (overview.tweet_kind.reply - overview.focus.reply - triggers.all_replies).toLocaleString() : t("dashboard.overview.retrieving"))}</li>
+                                        <li>{t("dashboard.summary.stats_all.replies_others_to", {user: user.name})}: {overview.all.to_monitored.toLocaleString()}</li>
+                                        <li>{t("dashboard.summary.stats_all.replies_others_others")}: {(overview.tweet_kind.reply - overview.focus.reply - overview.all.to_monitored).toLocaleString()}</li>
                                     </ul>
                                 </ul>
                             </Grid>
@@ -280,8 +278,8 @@ const AccountsSummary = (props) => {
                                 {t("dashboard.summary.stats_abusive.unique", { posts: abusive.all.count.toLocaleString(), authors: abusive.all.tweet_authors.toLocaleString() })}
                                 <ul>
                                     <li data-cy="abusiveOriginals">{t("dashboard.summary.stats_abusive.originals")}: {abusive.tweet_kind.original.toLocaleString()}</li>
-                                    <li data-cy="abusiveRepliesTo">{t("dashboard.summary.stats_abusive.replies_to", {user: user.name})}: {triggers.abusive_replies.toLocaleString()}</li>
-                                    <li data-cy="abusiveRepliesOther">{t("dashboard.summary.stats_abusive.replies_other", {user: user.name})}: {(abusive.tweet_kind.reply - triggers.abusive_replies).toLocaleString()}</li>
+                                    <li data-cy="abusiveRepliesTo">{t("dashboard.summary.stats_abusive.replies_to", {user: user.name})}: {abusive.all.to_monitored.toLocaleString()}</li>
+                                    <li data-cy="abusiveRepliesOther">{t("dashboard.summary.stats_abusive.replies_other", {user: user.name})}: {(abusive.tweet_kind.reply - abusive.all.to_monitored).toLocaleString()}</li>
                                 </ul>
                             </Grid>
 
@@ -298,11 +296,11 @@ const AccountsSummary = (props) => {
 
                             <Divider orientation="vertical" flexItem variant="middle" style={{ marginRight: "-1px", marginLeft: "0px" }} />
 
-                            {<Grid p={2} item xs={4} data-cy="abuseReplies">
-                                {t("dashboard.summary.stats_abusive.all_replies_to_total", { user: user.name, percentage: (100 * triggers.abusive_replies / triggers.all_replies).toFixed(2) })}
+                            {abusive.all.to_monitored > 0 && <Grid p={2} item xs={4} data-cy="abuseReplies">
+                                {t("dashboard.summary.stats_abusive.all_replies_to_total", { user: user.name, percentage: (100 * abusive.all.to_monitored / overview.all.to_monitored).toFixed(2) })}
                                 <ul>
-                                    <li data-cy="allRepliesTo">{t("dashboard.summary.stats_abusive.all_replies_to", {user: user.name})}: {triggers.all_replies.toLocaleString()}</li>
-                                    <li data-cy="abusiveRepliesToFocus">{t("dashboard.summary.stats_abusive.all_replies_to_abusive", {user: user.name})}: {triggers.abusive_replies.toLocaleString()}</li>
+                                    <li data-cy="allRepliesTo">{t("dashboard.summary.stats_abusive.all_replies_to", {user: user.name})}: {overview.all.to_monitored.toLocaleString()}</li>
+                                    <li data-cy="abusiveRepliesToFocus">{t("dashboard.summary.stats_abusive.all_replies_to_abusive", {user: user.name})}: {abusive.all.to_monitored.toLocaleString()}</li>
                                 </ul>
 
                             </Grid>}

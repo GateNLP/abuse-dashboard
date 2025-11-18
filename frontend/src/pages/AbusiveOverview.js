@@ -5,12 +5,13 @@ import Grid from "@mui/material/Grid";
 import { select } from "d3-selection";
 
 import Link from "@mui/material/Link";
-import { Box, Tab, Divider, Button } from "@mui/material";
+import { Box, Tab, Divider, Button, useTheme } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 import LinearProgress from "@mui/material/LinearProgress";
 
 import Plotly from 'plotly.js-dist-min'
+
 import createPlotlyComponent from 'react-plotly.js/factory';
 
 import ReactWordcloud from 'react-wordcloud';
@@ -49,6 +50,8 @@ import Status from "../Status";
 
 import {getISODate, calcMaxY, getPlotHeight} from "../api";
 
+import { abuseTypeColors as asc } from "../api";
+
 import { useTranslation } from "react-i18next";
 
 import PDFReport from "../components/buttons/PDFReport"
@@ -59,6 +62,8 @@ import dayjs from "dayjs";
 const Plot = createPlotlyComponent(Plotly);
 
 const AbusiveOverview = (props) => {
+
+    const theme = useTheme();
 
     const { t, i18n } = useTranslation()
 
@@ -101,7 +106,6 @@ const AbusiveOverview = (props) => {
     };
 
     const overview = useSelector(state => state.abusive.abusive);
-    const triggers = useSelector(state => state.abusive.triggers);
     const wholeIndex = useSelector(state => state.dashboard.overview);
     const user = useSelector(state => state.dashboard.user);
 
@@ -327,43 +331,40 @@ const AbusiveOverview = (props) => {
         text: null
     }
 
-    const asc = {
-        "reputation": "#3b828a",
-        "gendered reputation": "#b2f4fa",
+    // note that every colour must be different otherwise the bars get duplicated
+    /*const asc = {
+        "credibility": "#3b828a",
+        "gendered_credibility": "#b2f4fa",
+        "identity": "#91574e",
         "sexist": "#f4cfbe",
-        "sexual": "#f4cfbe",
-        "homophobic": "#f56262",
+        "homophobic_transphobic": "#f56262",
         "racist": "#a35f44",
-        "general": "#e19392",
-        "personal": "#e19392",
-        "religious": "#f0d275",
-        "political": "#e6b522"
-    };
-
-    const legend = {
-        "reputation": "#3b828a",
-        "gendered reputation": "#b2f4fa",
-        "sexist": "#f4cfbe",
-        "homophobic": "#f56262",
-        "racist": "#a35f44",
+        "other": "#e19392",  // should be general but hey ho
+        "beliefs": "#e69138",
         "religious": "#f0d275",
         "political": "#e6b522",
-        "general": "#e19392",
-    }
+        "threats": "#8B0000",
+        "death_threats": "#FF0000",
+        "sexual_threats": "#E23D28",
+        "sexualisation": "#f4cfbf"
+    }*/
+
+    // rather than duplicating the data simply do a spread copy
+    const legend = {...asc};
 
     var chordColors = [];
 
-    if (overview.all.abuse_types_intersection?.x) {
-        overview.all.abuse_types_intersection.x.forEach((item) => {
-            if (item === "personal")
-                chordColors.push("#91574e");
-            else if (item === "reputation")
-                chordColors.push("#3b828a");
-            else if (item === "sexist and explicit")
-                chordColors.push("#f4cfbe")
-            else
+    if (overview.all.abuse_types_intersection?.labels) {
+
+        overview.all.abuse_types_intersection.x = []
+
+        overview.all.abuse_types_intersection.labels.forEach((item) => {
                 chordColors.push(legend[item]);
+                overview.all.abuse_types_intersection.x.push(t("dashboard.overview.abuse_types."+item));
+
         });
+
+        overview.all.abuse_types_intersection.y = overview.all.abuse_types_intersection.x;
     }
 
     const genLegendFriendlyAbuseDetails = (originalStructure) => {
@@ -406,10 +407,6 @@ const AbusiveOverview = (props) => {
         return [organicAbuseStringsLegend.filter(graph => graph.x.length > 0), organicAbuseStringsUpdate.filter(x => x.length > 0)]
     }
 
-    Object.keys(overview.all.abuse_string_types).filter(key => overview.all.abuse_string_types[key] === "sexual").forEach((key) => {
-        overview.all.abuse_string_types[key] = "sexist";
-    });
-
     const organicAbuseStrings = {
         name: "Unique Tweets",
         marker: {
@@ -438,25 +435,31 @@ const AbusiveOverview = (props) => {
         text: null
     }
 
-    // these are ordered credibility, personal, belief
-    const abuseTypeColors = ["#3b828a", "#91574e", "#e69138"];
-
+    /**
+     * this array has to hold the colours for the outer ring in the sunburst.
+     * doing so makes sure that the tooltips work, and the colouring doesn't
+     * go completely nuts on the transition. Rather than hard coding them though
+     * we work out what they are from the sunburst data by looking for those
+     * that have the root as the parent.
+    **/
+    const abuseTypeColors = [];
+    overview.all.abuse_types_sunburst.ids.forEach((id, index) => {
+        if (overview.all.abuse_types_sunburst.parents[index] === "root")
+            abuseTypeColors.push(asc[id]);
+    })
 
     const recolor = (graphDiv) => {
         var div = select(graphDiv);
 
-        colourSegment(div, t("dashboard.overview.abuse_types.religious"), "#f7df3e");
-        colourSegment(div, t("dashboard.overview.abuse_types.political"), "#e6b522");
-        colourSegment(div, t("dashboard.overview.abuse_types.homophobic"), "#f56262");
-        colourSegment(div, t("dashboard.overview.abuse_types.racist"), "#a35f44");
-        colourSegment(div, t("dashboard.overview.abuse_types.sexist"), "#f4cfbe");
-        colourSegment(div, t("dashboard.overview.abuse_types.gendered reputation"), "#b2f4fa");
-        colourSegment(div, t("dashboard.overview.abuse_types.general"), "#e19392");
-
+        Object.keys(asc).forEach(type => {
+            colourSegment(div, t("dashboard.overview.abuse_types."+type), asc[type]);
+        })
     };
 
     const colourSegment = (div, name, color) => {
         var political = div.select("text[data-unformatted*='" + name + "']");
+
+        political.style("fill", theme.palette.getContrastText(color));
 
         var path = select(political?.node()?.parentNode?.parentNode)?.select("path");
 
@@ -475,7 +478,6 @@ const AbusiveOverview = (props) => {
         sort: false,
         branchvalues: "total",
         leaf: { opacity: 1 },
-        textfont: { color: "black" }
     }
 
     organicAbuseTypes.ids.forEach(type => {
@@ -524,7 +526,7 @@ const AbusiveOverview = (props) => {
 
     overviewDescription.push(
         t("dashboard.overview.stats_abusive.unique", {posts: overview.all.count.toLocaleString(), authors: overview.all.tweet_authors.toLocaleString()}) +
-        " " + t("dashboard.reports.abuseOverview", {originals: overview.tweet_kind.original.toLocaleString(), replies: triggers.abusive_replies.toLocaleString(), other: (overview.tweet_kind.reply - triggers.abusive_replies).toLocaleString()})
+        " " + t("dashboard.reports.abuseOverview", {originals: overview.tweet_kind.original.toLocaleString(), replies: overview.all.to_monitored.toLocaleString(), other: (overview.tweet_kind.reply - overview.all.to_monitored).toLocaleString()})
     )
 
     if (Object.keys(overview.all.platforms).length > 1) {
@@ -541,7 +543,7 @@ const AbusiveOverview = (props) => {
     )
 
     overviewDescription.push(
-        t("dashboard.reports.abuseReplies", {percentage: (100 * triggers.abusive_replies / triggers.all_replies).toFixed(2)})
+        t("dashboard.reports.abuseReplies", {percentage: (100 * overview.all.to_monitored / wholeIndex.all.to_monitored).toFixed(2)})
     )
 
     return (
@@ -564,8 +566,8 @@ const AbusiveOverview = (props) => {
                     {t("dashboard.overview.stats_abusive.unique", {posts: overview.all.count.toLocaleString(), authors: overview.all.tweet_authors.toLocaleString()})}
                     <ul>
                         <li data-cy="abusiveOriginals">{t("dashboard.overview.stats_abusive.originals")}: {overview.tweet_kind.original.toLocaleString()}</li>
-                        <li data-cy="abusiveRepliesTo">{t("dashboard.overview.stats_abusive.replies_to")}: {triggers.abusive_replies.toLocaleString()}</li>
-                        <li data-cy="abusiveRepliesOther">{t("dashboard.overview.stats_abusive.replies_other")}: {(overview.tweet_kind.reply - triggers.abusive_replies).toLocaleString()}</li>
+                        <li data-cy="abusiveRepliesTo">{t("dashboard.overview.stats_abusive.replies_to")}: {overview.all.to_monitored.toLocaleString()}</li>
+                        <li data-cy="abusiveRepliesOther">{t("dashboard.overview.stats_abusive.replies_other")}: {(overview.tweet_kind.reply - overview.all.to_monitored).toLocaleString()}</li>
                     </ul>
                 </Grid>
 
@@ -582,11 +584,11 @@ const AbusiveOverview = (props) => {
 
                 <Divider orientation="vertical" flexItem variant="middle" style={{ marginRight: "-1px", marginLeft: "0px" }} />
 
-                {wholeIndex.focus.total > 0 && <Grid p={2} item xs={4}  data-cy="abuseReplies">
-                    {t("dashboard.overview.stats_abusive.all_replies_to_total", {percentage: (100 * triggers.abusive_replies / triggers.all_replies).toFixed(2)})}
+                {wholeIndex.focus.total > 0 && wholeIndex.all.to_monitored > 0 && <Grid p={2} item xs={4}  data-cy="abuseReplies">
+                    {t("dashboard.overview.stats_abusive.all_replies_to_total", {percentage: (100 * overview.all.to_monitored / wholeIndex.all.to_monitored).toFixed(2)})}
                     <ul>
-                        <li data-cy="allRepliesTo">{t("dashboard.overview.stats_abusive.all_replies_to")}: {triggers.all_replies.toLocaleString()}</li>
-                        <li data-cy="abusiveRepliesToFocus">{t("dashboard.overview.stats_abusive.all_replies_to_abusive")}: {triggers.abusive_replies.toLocaleString()}</li>
+                        <li data-cy="allRepliesTo">{t("dashboard.overview.stats_abusive.all_replies_to")}: {wholeIndex.all.to_monitored.toLocaleString()}</li>
+                        <li data-cy="abusiveRepliesToFocus">{t("dashboard.overview.stats_abusive.all_replies_to_abusive")}: {overview.all.to_monitored.toLocaleString()}</li>
                     </ul>
 
                 </Grid>}
@@ -875,10 +877,10 @@ const AbusiveOverview = (props) => {
                                     <Tab label={t("dashboard.overview.order.date")} value="0" />
                                 </TabList>
                             </Box>
-                            <TabPanel value="0"><TweetTable addToReport={addToReport} addToQuery={addToQuery} tabs={tabs} compliance={complianceMode} anonymize={anonymousMode} abusive="true" query={props.query} filter={props.filter} from={props.from} to={props.to} sort="0" displayOptions={tweetDisplayOptions} /></TabPanel>
-                            <TabPanel value="1"><TweetTable addToReport={addToReport} addToQuery={addToQuery} tabs={tabs} compliance={complianceMode} anonymize={anonymousMode} abusive="true" query={props.query} filter={props.filter} from={props.from} to={props.to} sort="1" displayOptions={tweetDisplayOptions}/></TabPanel>
-                            <TabPanel value="2"><TweetTable addToReport={addToReport} addToQuery={addToQuery} tabs={tabs} compliance={complianceMode} anonymize={anonymousMode} abusive="true" query={props.query} filter={props.filter} from={props.from} to={props.to} sort="2" displayOptions={tweetDisplayOptions}/></TabPanel>
-                            <TabPanel value="3"><TweetTable addToReport={addToReport} addToQuery={addToQuery} tabs={tabs} compliance={complianceMode} anonymize={anonymousMode} abusive="true" query={props.query} filter={props.filter} from={props.from} to={props.to} sort="3" displayOptions={tweetDisplayOptions}/></TabPanel>
+                            <TabPanel value="0"><TweetTable showChips={true} addToReport={addToReport} addToQuery={addToQuery} tabs={tabs} compliance={complianceMode} anonymize={anonymousMode} abusive="true" query={props.query} filter={props.filter} from={props.from} to={props.to} sort="0" displayOptions={tweetDisplayOptions} /></TabPanel>
+                            <TabPanel value="1"><TweetTable showChips={true} addToReport={addToReport} addToQuery={addToQuery} tabs={tabs} compliance={complianceMode} anonymize={anonymousMode} abusive="true" query={props.query} filter={props.filter} from={props.from} to={props.to} sort="1" displayOptions={tweetDisplayOptions}/></TabPanel>
+                            <TabPanel value="2"><TweetTable showChips={true} addToReport={addToReport} addToQuery={addToQuery} tabs={tabs} compliance={complianceMode} anonymize={anonymousMode} abusive="true" query={props.query} filter={props.filter} from={props.from} to={props.to} sort="2" displayOptions={tweetDisplayOptions}/></TabPanel>
+                            <TabPanel value="3"><TweetTable showChips={true} addToReport={addToReport} addToQuery={addToQuery} tabs={tabs} compliance={complianceMode} anonymize={anonymousMode} abusive="true" query={props.query} filter={props.filter} from={props.from} to={props.to} sort="3" displayOptions={tweetDisplayOptions}/></TabPanel>
                         </TabContext>
                     </Box>
                 </Grid>

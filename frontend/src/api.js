@@ -5,6 +5,7 @@ import YouTubeIcon from "@mui/icons-material/YouTube";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import { ReactComponent as MastodonIcon } from "./images/mastodon.svg"
 import { ReactComponent as TikTokIcon } from "./images/tiktok.svg";
+import { ReactComponent as ThreadsIcon } from "./images/threads.svg";
 import OtherIcon from "@mui/icons-material/QuestionAnswer";
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -285,6 +286,10 @@ export function getAccountLink(platform, handle) {
     return `https://www.instagram.com/${handle}`;
   }
 
+  if (platform === "Threads") {
+    return  `https://www.threads.com/@${handle}`;
+  }
+
   return "#";
 }
 
@@ -309,6 +314,9 @@ export function getPlatformIcon(platform, style) {
 
     if (platform === "Instagram")
         return (<InstagramIcon alt="Instagram" style={style}/>)
+
+    if (platform === "Threads")
+        return (<ThreadsIcon alt="Threads" style={style}/>)
 
     return (<OtherIcon style={style}/>)
 }
@@ -347,6 +355,10 @@ export function getPostLink(post) {
     if (post.platform === "Facebook") {
         var parts = post.id.split("_");
         return "http://www.facebook.com/"+parts[0]+"/posts/"+parts[1]
+    }
+
+    if (post.platform === "Threads") {
+        return `http://www.threads.com/@${post.user.screen_name}/post/${post.id}`
     }
 
     return "#"
@@ -411,6 +423,12 @@ export function calcMaxY(timeline) {
 }
 
 export function getPlotHeight(data) {
+
+    if (data == null || data === undefined || data.length === 0 || Object.keys(data).length === 0) {
+        console.error("no data passed to getPlotHeight, returning default of 100")
+        return 100;
+    }
+
     if (data.x)
         return 50 + (data.x.length*35);
     else
@@ -434,4 +452,38 @@ export function getCountryName(countries, countryCode) {
     } catch {
         return "UNKNOWN ";
     }
+}
+
+// NOTE: every colour must be different otherwise you end up with
+//       duplicated bars in one of the graphs due to the way the
+//       bars are added based on the colours -- if you want two to
+//       look almost the same tweak the final character up/down one
+export const abuseTypeColors = {
+    // these are the colors for the Nerve model
+    "credibility": "#3b828a",
+    "gendered_credibility": "#b2f4fa",
+    "identity": "#91574e",
+    "sexist": "#f4cfbe",
+    "homophobic_transphobic": "#f56262",
+    "racist": "#a35f44",
+    "other": "#e19392",  // should be general but hey ho
+    "beliefs": "#e69138",
+    "religious": "#f0d275",
+    "political": "#e6b522",
+    "threats": "#8B0000",
+    "death_threats": "#FF0000",
+    "sexual_threats": "#E23D28",
+    "sexualisation": "#f4cfbf",
+
+    // this is for no abuse in the conversation explorer
+    "none": "#c0c0c0",
+
+    // these are the types from our original model
+    // that aren't also in the new model
+    "reputation": "#3b828b",
+    "gendered reputation": "#b2f4fa",
+    "homophobic": "#f56263",
+    "general": "#e19394",
+    "personal": "#e19393",
+    "belief": "#e69139",
 }

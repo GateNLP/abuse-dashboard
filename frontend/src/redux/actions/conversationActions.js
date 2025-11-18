@@ -36,7 +36,7 @@ export const setConversationCategories = (categories) => {
         type: "SET_CONVERSATION_CATEGORIES",
         payload: {
             categories: categories,
-            filter: Object.keys(categories),
+            filter: categories,
             cloud: null,
             done: false,
             loading: true

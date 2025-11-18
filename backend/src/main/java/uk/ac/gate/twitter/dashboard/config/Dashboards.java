@@ -78,7 +78,9 @@ public class Dashboards {
          return selected;
       }
       
-      private List<Map<String,Object>> events;   
+      private List<Map<String,Object>> events;
+
+      private Map<String,List<String>> abuseHierarchy;
       
       @Deprecated
       public String getHandle() {
@@ -240,8 +242,9 @@ public class Dashboards {
 
    @Data
    public static class User {
-      // the name of the person
-      private String name;
+      // we now allow a person to have multiple names (mostly so we can handle variation like
+      // names with and withough accents). Where we only need a label the first name is used.
+      private List<String> name;
 
       // their twitter account handle (be careful to make sure the case is correct)
       private String handle;

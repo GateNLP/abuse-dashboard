@@ -152,7 +152,7 @@
                 "retweets_others": "Retweets/forwards not by/of {{user}}"                
             },
             "stats_abusive": {
-                "none": "{{user}} received no abusive messages on {{platform}}",
+                "none": "No abuse towards {{user}} was detected on {{platform}}",
                 "description": "Within the subset of these posts which are considered abusive towards {{user}} there were...",
                 "total": "{{total}} posts in total.",
                 "unique": "{{posts}} unique posts from {{authors}} different accounts.",
@@ -327,7 +327,8 @@
                 "Website": "Website",
                 "TikTok": "TikTok",
                 "Facebook": "Facebook",
-                "Instagram": "Instagram"
+                "Instagram": "Instagram",
+                "Threads": "Threads"
             },
             "platforms": "These posts are spread across the following platforms:",
             "retrieveError": "Unable to retrieve",
@@ -400,16 +401,28 @@
             },
             "abuse_types": {
                 "root": "all types of abuse",
-                "reputation": "attacks on credibility",
-                "personal": "personal attack",
-                "sexist": "sexist and explicit",
-                "homophobic": "homophobic",
-                "racist": "racist",
-                "general": "general",
-                "belief": "belief",
-                "religious": "religious",
-                "political": "political",
-                "gendered reputation": "gendered attacks on credibility"
+                "none": "Not Abusive",
+                "credibility": "Attacks on Credibility",
+                "gendered_credibility": "Gendered Attacks on Credibility",
+                "identity": "Identity-based Attacks",
+                "sexist": "Sexist / Misogynist",
+                "homophobic_transphobic": "Homophobic / Transphobic",
+                "racist": "Racist",
+                "other": "General / Other",
+                "beliefs": "Attacks on Beliefs",
+                "religious": "Religious",
+                "political": "Political / Ideological",
+                "threats": "Threats of Violence",
+                "death_threats": "Death threats",
+                "sexual_threats": "Threats of Sexual Violence",
+                "sexualisation": "Sexualisation",
+
+                "reputation": "Attacks on Credibility",
+                "gendered reputation": "Gendered Attacks on Credibility",
+                "personal": "Personal Attack",
+                "belief": "Attacks on Beliefs",
+                "homophobic": "Homophobic",
+                "general": "General"
             },
             "topics": {
                 "food_and_farming": "food and farming",

@@ -66,9 +66,15 @@ public class QueryParts {
     * name as well as a single term handle etc.
     * 
     **********************************************************************/
-   public  QueryBuilder queryTargetIs(String value) {
+   public  QueryBuilder queryTargetIs(String... values) {
+
+      BoolQueryBuilder shouldQuery = new BoolQueryBuilder();
+      for (String value : values) {
+         shouldQuery.should(QueryBuilders.matchPhraseQuery("entities.Abuse.target", value));
+      }
+
       QueryBuilder targetIs = QueryBuilders.nestedQuery("entities.Abuse",
-            QueryBuilders.matchPhraseQuery("entities.Abuse.target", value), ScoreMode.None);
+            shouldQuery, ScoreMode.None);
       return targetIs;
    }
 
@@ -98,7 +104,7 @@ public class QueryParts {
     * @param handle
     * @return
     */
-   public  QueryBuilder queryTargetInReplyToQuery(Dashboards.Config config, String name) {
+   public  QueryBuilder queryTargetInReplyToQuery(Dashboards.Config config, List<String> names) {
 
       NestedQueryBuilder targetAddressee = QueryBuilders.nestedQuery("entities.Abuse",
             QueryBuilders.boolQuery()
@@ -107,7 +113,10 @@ public class QueryParts {
 
       
       
-      BoolQueryBuilder inReplyToQuery = QueryBuilders.boolQuery().should(QueryBuilders
+      BoolQueryBuilder inReplyToQuery = QueryBuilders.boolQuery();
+      
+      for (String name : names)
+         inReplyToQuery.should(QueryBuilders
             .matchQuery(config.getTweetPrefix() + "query.keyword", "\""+name+"\""));
 
       BoolQueryBuilder targetInReplyToHandle = QueryBuilders.boolQuery()
@@ -236,7 +245,7 @@ public class QueryParts {
       return abusiveQuery;
    }
 
-   public  QueryBuilder queryAbusiveTweets(Dashboards.Config config, String handle, String name) {
+   public  QueryBuilder queryAbusiveTweets(Dashboards.Config config, String handle, List<String> name) {
 
       // the query breaks down into three parts....
       BoolQueryBuilder abusiveQuery = QueryBuilders.boolQuery();
@@ -253,9 +262,9 @@ public class QueryParts {
          abusiveQuery.should(targetHandle);
       }
 
-      if (name != null && !name.equals("")) {
+      if (name != null && name.size() > 0) {
          // 3. where the target of the abuse is the name of the index config
-         QueryBuilder targetName = queryTargetIs(name);
+         QueryBuilder targetName = queryTargetIs(name.toArray(new String[]{}));
          abusiveQuery.should(targetName);
          
          QueryBuilder targetInRepltoQuery = queryTargetInReplyToQuery(config, name);
@@ -278,8 +287,8 @@ public class QueryParts {
          query.should(QueryBuilders.termQuery("entities.UserID.user.keyword", handle));
       }
 
-      String name = user.getName();
-      query.should(QueryBuilders.matchPhraseQuery("text", name));
+      for (String name : user.getName())
+         query.should(QueryBuilders.matchPhraseQuery("text", name));
 
       return QueryBuilders.boolQuery().filter(query);
    }
@@ -296,7 +305,7 @@ public class QueryParts {
    
    public QueryBuilder queryYouTubeRelevantToUser(Dashboards.Config config, User user) {
 
-      String name = user.getName();
+      String name = user.getName().get(0);
       BoolQueryBuilder query = QueryBuilders.boolQuery();
 
       query.should(QueryBuilders.termsQuery(config.getTweetPrefix()+"query.keyword", new String[]{"\""+name+"\"",name, "\""+name+",\""}));
@@ -306,7 +315,7 @@ public class QueryParts {
    
    public QueryBuilder queryOtherRelevantToUser(Dashboards.Config config, User user) {
 
-      String name = user.getName();
+      //String name = user.getName();
       BoolQueryBuilder query = QueryBuilders.boolQuery();
 
       query.should(QueryBuilders.termsQuery("related_to.keyword", new String[]{user.getHandle()}));

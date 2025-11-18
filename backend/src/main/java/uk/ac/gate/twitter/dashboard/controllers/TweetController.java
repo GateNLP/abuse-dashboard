@@ -14,6 +14,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -190,13 +191,7 @@ public class TweetController {
                series.put("x", new ArrayList<String>());
                series.put("y", new ArrayList<Long>());
                series.put("type", "bar");
-               series.put("name", b.getKeyAsString());
-
-               Map<String, String> marker = new HashMap<String, String>();
-
-               marker.put("color", categories.getColor(b.getKeyAsString()));
-
-               series.put("marker", marker);
+               series.put("label", b.getKeyAsString());
 
                timeline.put(b.getKeyAsString(), series);
             }
@@ -214,12 +209,7 @@ public class TweetController {
          } // );
       }
 
-      List timelineValues = new ArrayList();
-
-      for (String category : categories.getLabels().keySet()) {
-         if (timeline.containsKey(category))
-            timelineValues.add(0, timeline.get(category));
-      }
+      Collection<Object> timelineValues = timeline.values();
 
       List<String> firstTwoWeeks = new ArrayList<String>();
       firstTwoWeeks.add(DISPLAY_DATE_FORMAT.format(createdAt.minusDays(1)));
@@ -243,11 +233,7 @@ public class TweetController {
       // if (daysBetween > 1)
       data.put("timeline", timelineValues);
 
-      Map labelSubset = new LinkedHashMap(categories.getLabels());
-      labelSubset.keySet().retainAll(stance.keySet());
-
-      data.put("category_labels", labelSubset);
-      data.put("category_description", categories.getDescription());
+      data.put("category_labels", stance.keySet());
 
       // finally return the JSON response
       return data;

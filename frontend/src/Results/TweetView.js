@@ -23,7 +23,7 @@ import SuspendedIcon from '@mui/icons-material/PauseCircleFilled'
 
 import Typography from "@mui/material/Typography";
 
-import { anonymize, getPlatformIcon, getPostLink, getParentPostLink } from "../api";
+import { anonymize, getPlatformIcon, getPostLink, getParentPostLink, abuseTypeColors } from "../api";
 
 import Blur from 'react-css-blur';
 
@@ -38,6 +38,8 @@ import UserMenu from "../components/buttons/UserMenu"
 import SourceMenu from "../components/buttons/SourceMenu"
 
 import PDFReport from "../components/buttons/PDFReport"
+
+import Chip from '@mui/material/Chip';
 
 const style = {
     position: 'absolute',
@@ -60,6 +62,8 @@ function TweetView(props) {
     const i = props.data;
 
     const t = props.t;
+
+    const showChips = props.showChips;
 
     const tabs = props.tabs || null;
 
@@ -331,6 +335,15 @@ function TweetView(props) {
                                         : null}
                                     {iMatches.length > 0 &&
                                         <span style={{ fontSize: "80%", color: "grey" }}>{iMatches.join(", ")}</span>
+                                    }
+
+
+                                    {showChips && i.abuseTypes &&
+                                        <span style={{ fontSize: "80%"}}>
+                                            {i.abuseTypes.map((abuseType, i) => 
+                                                <Chip sx={(theme) => ({marginRight: "0.5em", backgroundColor: abuseTypeColors[abuseType], color: theme.palette.getContrastText(abuseTypeColors[abuseType] ? abuseTypeColors[abuseType] : "#FFFFFF")})} label={t("dashboard.overview.abuse_types."+abuseType)} />
+                                            )}
+                                        </span>
                                     }
 
                                     {i.source && <SourceMenu addToQuery={props.addToQuery} text={i.source_text} url={i.source_url} orig={i.source}><span style={{fontSize: "80%", color: "grey"}}>{i.source_text}</span></SourceMenu>}

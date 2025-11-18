@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
@@ -321,9 +322,14 @@ public class IndexController {
 
             long count = 0;
 
+            List<String> headers = new ArrayList<String>(Arrays.asList("url", "screen_name", "id_str", "platform", "post_kind", "created_at", "lang", "fulltext"));
+
+            if (abusive) {
+               headers.add("abuse_types");
+            }
+
             // write the header row
-            csv.writeNext(new String[] { "url", "screen_name", "id_str", "platform", "post_kind", "created_at", "lang", "fulltext",
-                   }, false);
+            csv.writeNext(headers.toArray(new String[] {}), false);
 
             allTweets: while (hits != null && hits.length > 0) {
                for (SearchHit hit : hits) {
@@ -353,11 +359,17 @@ public class IndexController {
                         link = "https://youtube.com/watch?v="+tweet.get("conversation_id")+"&lc="+idStr;
                  }
 
+                 List<String> row = new ArrayList<String>(Arrays.asList(link , screenName, idStr,
+                              (String) tweet.get("platform"), (String) tweet.get("tweet_kind"), (String) tweet.get("created_at_raw"),
+                              tweet.get("lang").toString(), tweet.get("text").toString().trim()));
+
+                  if (abusive) {
+                     row.add(String.join("|",(Set<String>)tweet.get("abuseTypes")));
+                  }
+
                   // write the data for this tweet
                   csv.writeNext(
-                        new String[] {link , screenName, idStr,
-                              (String) tweet.get("platform"), (String) tweet.get("tweet_kind"), (String) tweet.get("created_at_raw"),
-                              tweet.get("lang").toString(), tweet.get("text").toString().trim()},
+                        row.toArray(new String[] {}),
                         false);
 
                   ++count;
@@ -791,6 +803,7 @@ public class IndexController {
       }
 
       allPlatforms.put("count", searchResponse.getHits().getTotalHits().value);
+      allPlatforms.put("to_monitored", ((ParsedFilter)searchResponse.getAggregations().get("to_monitored")).getDocCount());
       allPlatforms.put("hashtags", aggregationToMap(searchResponse.getAggregations().get("unique_hashtags")));
       allPlatforms.put("languages", aggregationToMap(searchResponse.getAggregations().get("unique_languages")));
       
@@ -889,7 +902,7 @@ public class IndexController {
             typesAggregation,
                "reverse");
          //allPlatforms.put("abuse_types", abuseTypes);
-         allPlatforms.put("abuse_types_sunburst", buildSunburstData(abuseTypes));
+         allPlatforms.put("abuse_types_sunburst", buildSunburstData(config.getAbuseHierarchy(), abuseTypes));
          allPlatforms.put("abuse_types_intersection", buildIntersectionData(typesAggregation));
 
 
@@ -969,7 +982,7 @@ public class IndexController {
 
          if (searchResponse.getHits().getTotalHits().value > 0) {
             relevantYouTube.add(convertToSeries(aggregationToMap(searchResponse.getAggregations().get("organic_timeline")),
-                  user.getName(), user.getColor(), "bar", firstDay, lastDay));
+                  user.getName().get(0), user.getColor(), "bar", firstDay, lastDay));
          }
       }
 
@@ -1020,7 +1033,7 @@ public class IndexController {
          searchResponse = getClient(config).search(searchRequest, RequestOptions.DEFAULT);
 
          relevantOther.add(convertToSeries(aggregationToMap(searchResponse.getAggregations().get("organic_timeline")),
-               user.getName(), user.getColor(), "bar", firstDay, lastDay));
+               user.getName().get(0), user.getColor(), "bar", firstDay, lastDay));
       }
 
       Map<String,Object> tiktok = new HashMap<String,Object>();
@@ -1078,8 +1091,10 @@ public class IndexController {
          for (Map.Entry<String, Long> entry : intersection.entrySet()) {
             List<String> keys = Arrays.asList(new String[] { b.getKeyAsString(), entry.getKey() });
             keys.sort(null);
+
+            if (keys.contains("other")) continue;
             
-            for (int i = 0; i < 1; ++i) {
+            for (int i = 0; i <= 1; ++i) {
                Map<String, Long> inner = data.getOrDefault(keys.get(0), new TreeMap<String, Long>());
 
                inner.put(keys.get(1), entry.getValue());
@@ -1091,20 +1106,6 @@ public class IndexController {
       });
 
       List<List<Long>> z = new ArrayList<List<Long>>();
-
-      data.remove("general");
-      data.remove("sexual");
-      
-      for (Map.Entry<String, Map<String,Long>> entry : data.entrySet()) {
-         Map<String,Long> values = entry.getValue();
-         
-         Long val = values.remove("sexual");
-         if (val != null) values.put("sexist", values.getOrDefault("sexist", 0L) + val);
-         
-         if (entry.getKey().equals("sexist"))  values.remove("sexist");
-         
-         
-      } 
 
       long total = 0;
 
@@ -1129,27 +1130,20 @@ public class IndexController {
       }
       
       List<String> labels = new ArrayList<String>(data.keySet());
-      if (labels.contains("sexist"))
-         labels.set(labels.indexOf("sexist"), "sexist and explicit");
 
       Map<String,Object> json = new HashMap<String,Object>();
       json.put("type", "heatmap");
-      json.put("x", labels);
-      json.put("y", labels);
+      json.put("labels", labels);
       json.put("z", z);
       json.put("colorscale", "RdOrYl");
       return json;
    }
 
-   public Map<String, List> buildSunburstData(Map<String, Long> types) {
+   public Map<String, List> buildSunburstData(Map<String,List<String>> hierarchy, Map<String, Long> types) {
       List<String> ids = new ArrayList<String>();
       List<String> labels = new ArrayList<String>();
       List<Long> values = new ArrayList<Long>();
       List<String> parents = new ArrayList<String>();
-
-      // TODO should we think about leaving out leaf nodes if they are only a tiny
-      // percentage and hence difficult to see? They would still be counted on the
-      // inner ring so we wouldn't loose date
 
       // the root elements, we calculate it's value at the end
       ids.add("root");
@@ -1157,75 +1151,24 @@ public class IndexController {
       values.add(0L);
       parents.add("");
 
-      // TODO should we break this down on the outer ring?
-      // attacks on credibility = reputation + gendered reputation
-      ids.add("reputation");
-      labels.add("attacks on credibility");
-      values.add(types.getOrDefault("reputation", 0L) + types.getOrDefault("gendered reputation", 0L));
-      parents.add("root");
+      for (Map.Entry<String,List<String>> entry : hierarchy.entrySet()) {
+         ids.add(entry.getKey());
+         parents.add("root");
 
-      // This is new as we didn't have this as a separate category before
-      ids.add("gendered reputation");
-      labels.add("gender based");
-      values.add(types.getOrDefault("gendered reputation", 0L));
-      parents.add("reputation");
+         long total = types.getOrDefault(entry.getKey(), 0L);
 
-      // personal attack
-      ids.add("personal");
-      labels.add("personal attack");
-      values.add(types.getOrDefault("sexist", 0L) + types.getOrDefault("sexual", 0L)
-            + types.getOrDefault("homophobic", 0L) + types.getOrDefault("racist", 0L)
-            + types.getOrDefault("general", 0L) + types.getOrDefault("personal", 0L));
-      parents.add("root");
+         List<Long> counts = new ArrayList<Long>();
+         for (String lower : entry.getValue()) {
+            ids.add(lower);
+            parents.add(entry.getKey());
+            Long value = types.getOrDefault(lower, 0L);
+            total += value;
+            counts.add(value);
+         }
 
-      // personal attack => sexist, misogynistic, and explicit = sexist + sexual
-      ids.add("sexist");
-      labels.add("sexist, misogynistic, and explicit");
-      values.add(types.getOrDefault("sexist", 0L) + types.getOrDefault("sexual", 0L));
-      parents.add("personal");
-
-      // personal attack => homophobic = homophobic
-      ids.add("homophobic");
-      labels.add("homophobic");
-      values.add(types.getOrDefault("homophobic", 0L));
-      parents.add("personal");
-
-      // personal attack => racist = racist
-      ids.add("racist");
-      labels.add("racist");
-      values.add(types.getOrDefault("racist", 0L));
-      parents.add("personal");
-
-      // personal attack => racist = racist
-      ids.add("general");
-      labels.add("general");
-      values.add(types.getOrDefault("general", 0L) + types.getOrDefault("personal", 0L));
-      parents.add("personal");
-
-      ids.add("belief");
-      labels.add("belief");
-      values.add(types.getOrDefault("religious", 0L) + types.getOrDefault("political", 0L));
-      parents.add("root");
-
-      // belief => religious = religious
-      ids.add("religious");
-      labels.add("religious");
-      values.add(types.getOrDefault("religious", 0L));
-      parents.add("belief");
-
-      // belief => political = political
-      ids.add("political");
-      labels.add("political");
-      values.add(types.getOrDefault("political", 0L));
-      parents.add("belief");
-
-      // personal attack => other = general + personal
-      // NOTE: we've not previously had personal but I've just lumped it in with other
-      /*
-       * ids.add("other"); labels.add("other");
-       * values.add(types.getOrDefault("general", 0L)+types.getOrDefault("personal",
-       * 0L)); parents.add("personal");
-       */
+         values.add(total);
+         values.addAll(counts);
+      }
 
       for (int i = 1; i < parents.size(); ++i) {
          if (parents.get(i).equals("root"))
@@ -1347,8 +1290,6 @@ public class IndexController {
    @RequestParam(value = "to", defaultValue = "") String to, @PathVariable(required = true) String dashboard,
    @RequestBody Map<String,Object> filter) throws Exception {
 
-      System.out.println("\n\ngetting summary\n\n");
-
       // clear out any restrictedTo settings
       List<Integer> users = (List<Integer>)filter.get("users");
 
@@ -1370,7 +1311,6 @@ public class IndexController {
 
          summary.put("overview", overview(false, query, from, to, dashboard, filter));
          summary.put("abusive",overview(true, query, from, to, dashboard, filter));
-         summary.put("triggers", triggers(query, from, to, 5, dashboard, filter));
 
          result.add(summary);
 
